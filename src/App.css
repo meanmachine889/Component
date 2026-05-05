@@ -1,0 +1,107 @@
+:root {
+  --bg-color: #0a0a0a;
+  --panel-bg: #111;
+  --text-dim: #888;
+  --text-bright: #fff;
+  --border-color: #333;
+  --btn-bg: #1a1a1a;
+  --btn-hover: #252525;
+  --btn-sel: #2a2a2a;
+}
+
+.light-mode {
+  --bg-color: #e0e0e0;
+  --panel-bg: #e0e0e0;
+  --text-dim: #666;
+  --text-bright: #000;
+  --border-color: #ccc;
+  --btn-bg: #d0d0d0;
+  --btn-hover: #c0c0c0;
+  --btn-sel: #b0b0b0;
+}
+
+body {
+  margin: 0;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+.app {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  gap: 48px;
+  background: var(--bg-color);
+  transition: background 0.5s ease;
+}
+
+.controls {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 20px;
+  border-radius: 12px;
+  background: rgba(128, 128, 128, 0.05);
+  backdrop-filter: blur(8px);
+}
+
+.btn-group {
+  display: flex;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid var(--border-color);
+}
+
+.btn-group button {
+  background: var(--btn-bg);
+  color: var(--text-dim);
+  border: none;
+  padding: 10px 20px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.2s;
+  border-right: 1px solid var(--border-color);
+}
+
+.btn-group button:last-child {
+  border-right: none;
+}
+
+.btn-group button:hover {
+  background: var(--btn-hover);
+  color: var(--text-bright);
+}
+
+.btn-group button.sel {
+  background: var(--btn-sel);
+  color: var(--text-bright);
+}
+
+.toggle {
+  background: var(--btn-bg);
+  color: var(--text-dim);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 10px 20px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.toggle:hover {
+  background: var(--btn-hover);
+  color: var(--text-bright);
+}
+
+.theme-toggle {
+  min-width: 80px;
+}
+
