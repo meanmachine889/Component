@@ -15,29 +15,29 @@ const CLI_INIT = `npx shadcn@latest init`
 const CLI_ADD = `npx shadcn@latest add ${REGISTRY_URL}`
 
 const CSS_VARS = `:root {
-  --clock-panel:      oklch(0.920 0 0);
-  --clock-face:       oklch(0.960 0 0);
-  --clock-face-edge:  oklch(0.860 0 0);
-  --clock-rim:        oklch(0.790 0 0);
-  --clock-hand:       oklch(0.110 0 0);
+  --clock-panel:      oklch(0.965 0 0);
+  --clock-face:       oklch(1.000 0 0);
+  --clock-face-edge:  oklch(0.965 0 0);
+  --clock-rim:        oklch(0.905 0 0);
+  --clock-hand:       oklch(0.130 0 0);
   --clock-dial-shadow: inset 0 3px 8px rgba(0,0,0,0.08),
                        inset 0 1px 3px rgba(0,0,0,0.10),
                        inset 0 -2px 5px rgba(255,255,255,0.12);
-  --clock-shadow:     0 1px 4px rgba(0,0,0,0.08),
-                      0 6px 24px rgba(0,0,0,0.10);
+  --clock-shadow:     0 1px 2px rgba(0,0,0,0.04),
+                      0 8px 24px rgba(0,0,0,0.06);
 }
 
 .dark {
-  --clock-panel:      oklch(15.907% 0.00002 271.152);
-  --clock-face:       oklch(0.138 0 0);
-  --clock-face-edge:  oklch(0.090 0 0);
-  --clock-rim:        oklch(0.220 0 0);
-  --clock-hand:       oklch(0.970 0 0);
+  --clock-panel:      oklch(0.125 0 0);
+  --clock-face:       oklch(0.185 0 0);
+  --clock-face-edge:  oklch(0.160 0 0);
+  --clock-rim:        oklch(0.245 0 0);
+  --clock-hand:       oklch(0.930 0 0);
   --clock-dial-shadow: inset 0 3px 8px rgba(0,0,0,0.48),
                        inset 0 1px 3px rgba(0,0,0,0.55),
                        inset 0 -2px 5px rgba(255,255,255,0.04);
-  --clock-shadow:     0 2px 10px rgba(0,0,0,0.45),
-                      0 10px 36px rgba(0,0,0,0.40);
+  --clock-shadow:     0 1px 2px rgba(0,0,0,0.35),
+                      0 8px 24px rgba(0,0,0,0.50);
 }`
 
 const NPM_INSTALL = `npm install clsx tailwind-merge`
