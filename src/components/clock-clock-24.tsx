@@ -57,56 +57,65 @@ function ClockFace({ hand1Angle, hand2Angle, size }: ClockFaceProps) {
   })
 
   return (
-    <svg
-      width={size}
-      height={size}
-      viewBox={`0 0 ${size} ${size}`}
-      style={{ display: "block" }}
-      aria-hidden="true"
+    <div
+      style={{
+        width: size,
+        height: size,
+        borderRadius: "50%",
+        overflow: "hidden",
+        position: "relative",
+        border: "1px solid var(--clock-rim)",
+        flexShrink: 0,
+      }}
     >
-      <defs>
-        {/*
-         * Centre-flat → edge-darker radial. The first 78% of the radius is a
-         * flat fill; only the outermost 22% transitions to a slightly darker
-         * tone. Reads as a single flat colour with the faintest vignette —
-         * adds depth without looking skeuomorphic.
-         */}
-        <radialGradient id={`face-${uid}`} cx="50%" cy="50%" r="50%">
-          <stop offset="78%"  style={{ stopColor: "var(--clock-face)" }} />
-          <stop offset="100%" style={{ stopColor: "var(--clock-face-edge)" }} />
-        </radialGradient>
-      </defs>
+      <svg
+        width={size}
+        height={size}
+        viewBox={`0 0 ${size} ${size}`}
+        style={{ display: "block" }}
+        aria-hidden="true"
+      >
+        <defs>
+          <radialGradient id={`face-${uid}`} cx="50%" cy="50%" r="50%">
+            <stop offset="65%" style={{ stopColor: "var(--clock-face)" }} />
+            <stop offset="100%" style={{ stopColor: "var(--clock-face-edge)" }} />
+          </radialGradient>
+        </defs>
 
-      <circle cx={r} cy={r} r={r * 0.97} fill={`url(#face-${uid})`} />
+        <circle cx={r} cy={r} r={r} fill={`url(#face-${uid})`} />
 
-      {/* Hairline rim */}
-      <circle
-        cx={r} cy={r} r={r * 0.97}
-        fill="none"
-        stroke="var(--clock-rim)"
-        strokeWidth={1}
+        <g style={handStyle(acc1.current)}>
+          <line
+            x1={r} y1={r} x2={r} y2={r - handLen}
+            stroke="var(--clock-hand)"
+            strokeWidth={handWidth}
+            strokeLinecap="butt"
+          />
+        </g>
+
+        <g style={handStyle(acc2.current)}>
+          <line
+            x1={r} y1={r} x2={r} y2={r - handLen}
+            stroke="var(--clock-hand)"
+            strokeWidth={handWidth}
+            strokeLinecap="butt"
+          />
+        </g>
+
+        <circle cx={r} cy={r} r={handWidth * 0.5} style={{ fill: "var(--clock-hand)" }} />
+      </svg>
+
+      {/* Inset shadow overlay — creates the recessed 3D pocket look */}
+      <div
+        style={{
+          position: "absolute",
+          inset: 0,
+          borderRadius: "50%",
+          boxShadow: "var(--clock-dial-shadow)",
+          pointerEvents: "none",
+        }}
       />
-
-      <g style={handStyle(acc1.current)}>
-        <line
-          x1={r} y1={r} x2={r} y2={r - handLen}
-          stroke="var(--clock-hand)"
-          strokeWidth={handWidth}
-          strokeLinecap="butt"
-        />
-      </g>
-
-      <g style={handStyle(acc2.current)}>
-        <line
-          x1={r} y1={r} x2={r} y2={r - handLen}
-          stroke="var(--clock-hand)"
-          strokeWidth={handWidth}
-          strokeLinecap="butt"
-        />
-      </g>
-
-      <circle cx={r} cy={r} r={handWidth * 0.5} style={{ fill: "var(--clock-hand)" }} />
-    </svg>
+    </div>
   )
 }
 
@@ -292,12 +301,10 @@ export function KineticClock({
       className={cn("inline-block", className)}
       style={{
         background: "var(--clock-panel)",
-        border: "1px solid var(--border)",
-        borderRadius: size * 0.03,
+        borderRadius: 0,
         padding: `${paddingV}px ${paddingH}px`,
         boxShadow: "var(--clock-shadow)",
-        transition:
-          "background 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease",
+        transition: "background 0.4s ease, box-shadow 0.4s ease",
         ...style,
       }}
       role="img"

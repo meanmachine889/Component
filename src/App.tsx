@@ -290,7 +290,7 @@ type InstallTab = "cli" | "manual"
 // ── App ────────────────────────────────────────────────────────────────────────
 
 function App() {
-  const [theme, setTheme] = useState<"dark" | "light">("dark")
+  const [theme, setTheme] = useState<"dark" | "light">("light")
   const [mode, setMode] = useState<Mode>("active")
   const [format, setFormat] = useState<Format>("24h")
   const [installTab, setInstallTab] = useState<InstallTab>("cli")
@@ -388,7 +388,7 @@ function App() {
       </nav>
 
       {/* ── Hero ───────────────────────────────────────────────────────────── */}
-      <section style={{ padding: "96px 32px 80px", textAlign: "center" }}>
+      <section style={{ padding: "96px 32px 80px", textAlign: "center", background: theme === "dark" ? "var(--page-surface-2)" : undefined }}>
         <div
           style={{
             display: "inline-flex",
