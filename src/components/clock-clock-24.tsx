@@ -37,6 +37,9 @@ function shortestRotation(from: number, to: number): number {
 }
 
 function ClockFace({ hand1Angle, hand2Angle, size }: ClockFaceProps) {
+  // Unique ID for SVG defs — useId avoids the Math.random() re-render bug.
+  const uid = React.useId().replace(/:/g, "")
+
   // Track accumulated rotation so CSS transitions always take the short path.
   const acc1 = React.useRef<number>(hand1Angle)
   const acc2 = React.useRef<number>(hand2Angle)
@@ -44,8 +47,8 @@ function ClockFace({ hand1Angle, hand2Angle, size }: ClockFaceProps) {
   acc2.current = shortestRotation(acc2.current, hand2Angle)
 
   const r = size / 2
-  const handWidth = size * 0.12
-  const handLen = r * 0.88
+  const handWidth = size * 0.10
+  const handLen = r * 0.82
 
   const handStyle = (angle: number): React.CSSProperties => ({
     transformOrigin: `${r}px ${r}px`,
@@ -58,30 +61,35 @@ function ClockFace({ hand1Angle, hand2Angle, size }: ClockFaceProps) {
       width={size}
       height={size}
       viewBox={`0 0 ${size} ${size}`}
-      style={{ display: "block", overflow: "visible" }}
+      style={{ display: "block" }}
       aria-hidden="true"
     >
+      <defs>
+        {/*
+         * Centre-flat → edge-darker radial. The first 78% of the radius is a
+         * flat fill; only the outermost 22% transitions to a slightly darker
+         * tone. Reads as a single flat colour with the faintest vignette —
+         * adds depth without looking skeuomorphic.
+         */}
+        <radialGradient id={`face-${uid}`} cx="50%" cy="50%" r="50%">
+          <stop offset="78%"  style={{ stopColor: "var(--clock-face)" }} />
+          <stop offset="100%" style={{ stopColor: "var(--clock-face-edge)" }} />
+        </radialGradient>
+      </defs>
+
+      <circle cx={r} cy={r} r={r * 0.97} fill={`url(#face-${uid})`} />
+
+      {/* Hairline rim */}
       <circle
-        cx={r}
-        cy={r}
-        r={r}
-        style={{ fill: "var(--clock-face)" }}
-      />
-      <circle
-        cx={r}
-        cy={r}
-        r={r}
+        cx={r} cy={r} r={r * 0.97}
         fill="none"
-        stroke="var(--border)"
+        stroke="var(--clock-rim)"
         strokeWidth={1}
       />
 
       <g style={handStyle(acc1.current)}>
         <line
-          x1={r}
-          y1={r}
-          x2={r}
-          y2={r - handLen}
+          x1={r} y1={r} x2={r} y2={r - handLen}
           stroke="var(--clock-hand)"
           strokeWidth={handWidth}
           strokeLinecap="butt"
@@ -90,17 +98,14 @@ function ClockFace({ hand1Angle, hand2Angle, size }: ClockFaceProps) {
 
       <g style={handStyle(acc2.current)}>
         <line
-          x1={r}
-          y1={r}
-          x2={r}
-          y2={r - handLen}
+          x1={r} y1={r} x2={r} y2={r - handLen}
           stroke="var(--clock-hand)"
           strokeWidth={handWidth}
           strokeLinecap="butt"
         />
       </g>
 
-      <circle cx={r} cy={r} r={handWidth / 2} style={{ fill: "var(--clock-hand)" }} />
+      <circle cx={r} cy={r} r={handWidth * 0.5} style={{ fill: "var(--clock-hand)" }} />
     </svg>
   )
 }
@@ -287,10 +292,12 @@ export function ClockClock24({
       className={cn("inline-block", className)}
       style={{
         background: "var(--clock-panel)",
-        borderRadius: size * 0.025,
+        border: "1px solid var(--border)",
+        borderRadius: size * 0.03,
         padding: `${paddingV}px ${paddingH}px`,
         boxShadow: "var(--clock-shadow)",
-        transition: "background 0.5s ease, box-shadow 0.5s ease",
+        transition:
+          "background 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease",
         ...style,
       }}
       role="img"
