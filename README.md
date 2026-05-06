@@ -1,73 +1,76 @@
-# React + TypeScript + Vite
+# ClockClock 24
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+An animated 24-clock grid that spells out the current time. Cycles through wave, spiral, scatter, and time-display phases. Auto-follows the consumer's light/dark theme via CSS variables.
 
-Currently, two official plugins are available:
+Distributed as a [shadcn/ui](https://ui.shadcn.com) registry component.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Install
 
-## React Compiler
+In any project that has shadcn/ui set up:
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npx shadcn@latest add https://kinetic-clock.yxsh.in/r/clock-clock-24.json
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+This drops `clock-clock-24.tsx` into your `components/` directory and installs `clsx` and `tailwind-merge` if missing.
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+If you don't have shadcn/ui yet, initialize it first:
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npx shadcn@latest init
 ```
+
+## Usage
+
+```tsx
+import { ClockClock24 } from "@/components/clock-clock-24"
+
+export default function Page() {
+  return <ClockClock24 />
+}
+```
+
+## Props
+
+| Prop     | Type                                | Default    | Description                                                                 |
+| -------- | ----------------------------------- | ---------- | --------------------------------------------------------------------------- |
+| `mode`   | `"active" \| "medium" \| "quiet"`   | `"active"` | Choreography intensity. `active` cycles wave → spiral → scatter → time. `medium` skips scatter. `quiet` is static. |
+| `format` | `"12h" \| "24h"`                    | `"24h"`    | Time format.                                                                |
+| `size`   | `number`                            | `700`      | Outer width in pixels. Height derives from layout.                          |
+
+The component also accepts standard `HTMLAttributes<HTMLDivElement>` (`className`, `style`, etc.).
+
+## Theming
+
+Theming is driven by CSS custom properties. The install adds these to your `globals.css` automatically:
+
+| Variable            | Purpose                                  |
+| ------------------- | ---------------------------------------- |
+| `--clock-panel`     | Outer panel background                   |
+| `--clock-face`      | Clock face center                        |
+| `--clock-face-edge` | Clock face outer edge (subtle vignette)  |
+| `--clock-rim`       | Hairline border around each clock        |
+| `--clock-hand`      | Clock hand color                         |
+| `--clock-shadow`    | Outer shadow on the panel                |
+
+Override any of these in your `:root` and `.dark` blocks to customize the look.
+
+## Local development
+
+```bash
+npm install
+npm run dev          # demo app at localhost:5173
+npm run registry:build   # regenerate public/r/clock-clock-24.json
+npm run build        # type-check + Vite build (outputs to dist/)
+```
+
+The component source lives in two places that must stay identical:
+
+- `src/components/clock-clock-24.tsx` — used by the demo app
+- `registry/clock-clock-24/clock-clock-24.tsx` — the file the registry distributes
+
+After editing the component, run `npm run registry:build` to regenerate `public/r/clock-clock-24.json`, then `npm run build` and deploy `dist/` so the published JSON stays in sync.
+
+## License
+
+MIT

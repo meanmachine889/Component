@@ -9,7 +9,7 @@
       "title": "ClockClock 24",
       "description": "An animated 24-clock grid that spells out the current time. Cycles through wave, spiral, scatter, and time-display phases. Auto-follows the consumer's light/dark theme via CSS variables.",
       "dependencies": ["clsx", "tailwind-merge"],
-      "registryDependencies": [],
+      "registryDependencies": ["utils"],
       "files": [
         {
           "path": "registry/clock-clock-24/clock-clock-24.tsx",
