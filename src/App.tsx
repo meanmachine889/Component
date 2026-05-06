@@ -330,7 +330,6 @@ export default function App() {
   }, [])
 
   const clockSize = Math.min(windowWidth - 64, 700)
-  const CLI_COMMAND = CLI_ADD
 
   return (
     <div
