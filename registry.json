@@ -7,7 +7,7 @@
       "name": "clock-clock-24",
       "type": "registry:component",
       "title": "ClockClock 24",
-      "description": "An animated 24-clock grid that spells out the current time. Cycles through wave, spiral, scatter, and time-display phases. Auto-follows the consumer's light/dark theme via CSS variables.",
+      "description": "An animated 24-clock grid that spells out the current time. Cycles through wave, spiral, scatter, and time-display phases. Supports independent light/dark theme via the `theme` prop or inherits from parent's `.dark` class.",
       "dependencies": ["clsx", "tailwind-merge"],
       "registryDependencies": ["utils"],
       "files": [
