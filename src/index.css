@@ -3,17 +3,28 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
+  /* Page theme — light */
+  --page-bg: #ffffff;
+  --page-surface: #f8f9fa;
+  --page-surface-2: #f0f1f3;
+  --page-border: #e5e5e6;
+  --page-text: #0f1011;
+  --page-text-muted: #62666d;
+  --page-text-subtle: #8a8f98;
+  --page-accent: #e4f222;
+  --page-accent-fg: #0f1011;
+  --page-code-bg: #f0f1f3;
+  --page-code-text: #23252a;
+
+  /* Clock — light */
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);
   --card: oklch(0.985 0 0);
-  --card-foreground: oklch(0.145 0 0);
   --muted: oklch(0.92 0 0);
   --muted-foreground: oklch(0.45 0 0);
   --border: oklch(0.88 0 0);
   --primary: oklch(0.205 0 0);
   --primary-foreground: oklch(0.985 0 0);
-
-  /* Clock — minimal, hairline-driven, layered greys */
   --clock-panel:     oklch(0.965 0 0);
   --clock-face:      oklch(1.000 0 0);
   --clock-face-edge: oklch(0.965 0 0);
@@ -25,17 +36,28 @@
 }
 
 .dark {
+  /* Page theme — dark (Linear) */
+  --page-bg: #08090a;
+  --page-surface: #0f1011;
+  --page-surface-2: #161718;
+  --page-border: #23252a;
+  --page-text: #f7f8f8;
+  --page-text-muted: #8a8f98;
+  --page-text-subtle: #62666d;
+  --page-accent: #e4f222;
+  --page-accent-fg: #08090a;
+  --page-code-bg: #161718;
+  --page-code-text: #d0d6e0;
+
+  /* Clock — dark */
   --background: oklch(0.06 0 0);
   --foreground: oklch(0.985 0 0);
   --card: oklch(0.07 0 0);
-  --card-foreground: oklch(0.985 0 0);
   --muted: oklch(0.18 0 0);
   --muted-foreground: oklch(0.65 0 0);
   --border: oklch(0.22 0 0);
   --primary: oklch(0.985 0 0);
   --primary-foreground: oklch(0.18 0 0);
-
-  /* Clock — faces clearly NOT pure black; layered with the panel */
   --clock-panel:     oklch(16.842% 0.00002 271.152);
   --clock-face:      oklch(0.185 0 0);
   --clock-face-edge: oklch(0.160 0 0);
@@ -50,7 +72,6 @@
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
-  --color-card-foreground: var(--card-foreground);
   --color-muted: var(--muted);
   --color-muted-foreground: var(--muted-foreground);
   --color-border: var(--border);
@@ -65,8 +86,8 @@
 body {
   margin: 0;
   padding: 0;
-  background: var(--background);
-  color: var(--foreground);
+  background: var(--page-bg);
+  color: var(--page-text);
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   -webkit-font-smoothing: antialiased;
 }
