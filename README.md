@@ -1,75 +1,76 @@
-# ClockClock 24
+# Kinetic Clock
 
-An animated 24-clock grid that spells out the current time. Cycles through wave, spiral, scatter, and time-display phases. Auto-follows the consumer's light/dark theme via CSS variables.
+A minimalist animated grid of analog clocks that spells the current time. Cycles through wave, spiral, and scatter phases. Built as a [shadcn/ui](https://ui.shadcn.com) registry component.
 
-Distributed as a [shadcn/ui](https://ui.shadcn.com) registry component.
+Inspired by the iconic ClockClock 24.
 
-## Install
+## Installation
 
-In any project that has shadcn/ui set up:
+You can pull the component directly from the registry into your project:
 
 ```bash
 npx shadcn@latest add https://kinetic-clock.yxsh.in/r/clock-clock-24.json
 ```
 
-This drops `clock-clock-24.tsx` into your `components/` directory and installs `clsx` and `tailwind-merge` if missing.
+This will:
+1. Drop `clock-clock-24.tsx` into your `components/` directory.
+2. Install `clsx` and `tailwind-merge` if they aren't already present.
+3. Add the required CSS variables to your `globals.css` (or equivalent).
 
-If you don't have shadcn/ui yet, initialize it first:
-
+If you haven't initialized shadcn/ui yet:
 ```bash
 npx shadcn@latest init
 ```
 
 ## Usage
 
+Import and drop the component anywhere in your React application.
+
 ```tsx
-import { ClockClock24 } from "@/components/clock-clock-24"
+import { KineticClock } from "@/components/clock-clock-24"
 
 export default function Page() {
-  return <ClockClock24 />
+  return (
+    <KineticClock 
+      mode="active" 
+      format="24h" 
+      size={700} 
+    />
+  )
 }
 ```
 
 ## Props
 
+The component accepts all standard `HTMLDivElement` attributes, plus the following:
+
 | Prop     | Type                                | Default    | Description                                                                 |
 | -------- | ----------------------------------- | ---------- | --------------------------------------------------------------------------- |
-| `mode`   | `"active" \| "medium" \| "quiet"`   | `"active"` | Choreography intensity. `active` cycles wave → spiral → scatter → time. `medium` skips scatter. `quiet` is static. |
-| `format` | `"12h" \| "24h"`                    | `"24h"`    | Time format.                                                                |
-| `size`   | `number`                            | `700`      | Outer width in pixels. Height derives from layout.                          |
-
-The component also accepts standard `HTMLAttributes<HTMLDivElement>` (`className`, `style`, etc.).
+| `mode`   | `"active" \| "medium" \| "quiet"`   | `"active"` | Animation intensity. `active` cycles all phases. `quiet` only shows time. |
+| `format` | `"12h" \| "24h"`                    | `"24h"`    | Time format displayed by the clock grid.                                    |
+| `size`   | `number`                            | `700`      | Outer width in pixels. Height derives automatically from the grid layout.   |
+| `theme`  | `"light" \| "dark" \| "auto"`       | `"auto"`   | Forces a specific theme or inherits from the parent's `.dark` class.        |
 
 ## Theming
 
-Theming is driven by CSS custom properties. The install adds these to your `globals.css` automatically:
+Theming is driven by CSS variables. The component adapts to your project's light and dark modes automatically.
 
-| Variable            | Purpose                                  |
+| Variable            | Description                              |
 | ------------------- | ---------------------------------------- |
-| `--clock-panel`     | Outer panel background                   |
-| `--clock-face`      | Clock face center                        |
-| `--clock-face-edge` | Clock face outer edge (subtle vignette)  |
-| `--clock-rim`       | Hairline border around each clock        |
-| `--clock-hand`      | Clock hand color                         |
-| `--clock-shadow`    | Outer shadow on the panel                |
+| `--clock-panel`     | Background of the entire clock grid      |
+| `--clock-face`      | Background of individual clock faces     |
+| `--clock-rim`       | Border color of each clock               |
+| `--clock-hand`      | Color of the clock hands                 |
+| `--clock-shadow`    | Shadow applied to the panel container    |
 
-Override any of these in your `:root` and `.dark` blocks to customize the look.
-
-## Local development
+## Development
 
 ```bash
 npm install
-npm run dev          # demo app at localhost:5173
-npm run registry:build   # regenerate public/r/clock-clock-24.json
-npm run build        # type-check + Vite build (outputs to dist/)
+npm run dev          # Start the demo app
+npm run registry:build   # Regenerate the registry JSON
+npm run build        # Build for production
 ```
-
-The component source lives in two places that must stay identical:
-
-- `src/components/clock-clock-24.tsx` — used by the demo app
-- `registry/clock-clock-24/clock-clock-24.tsx` — the file the registry distributes
-
-After editing the component, run `npm run registry:build` to regenerate `public/r/clock-clock-24.json`, then `npm run build` and deploy `dist/` so the published JSON stays in sync.
 
 ## License
 

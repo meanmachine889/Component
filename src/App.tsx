@@ -666,6 +666,12 @@ export default function App() {
                   <td style={tdStyle}><code style={codeInline}>700</code></td>
                   <td style={{ ...tdStyle, borderRight: "none" }}>Outer width in pixels. Height derives from layout.</td>
                 </tr>
+                <tr style={{ borderTop: "1px solid var(--page-border)" }}>
+                  <td style={tdStyle}><code style={codeInline}>theme</code></td>
+                  <td style={tdStyle}><code style={codeInline}>"light" | "dark" | "auto"</code></td>
+                  <td style={tdStyle}><code style={codeInline}>"auto"</code></td>
+                  <td style={{ ...tdStyle, borderRight: "none" }}>Forces a specific theme or inherits from parent's .dark class.</td>
+                </tr>
               </tbody>
             </table>
           </div>
