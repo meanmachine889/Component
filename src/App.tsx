@@ -20,15 +20,15 @@ const CSS_VARS = `:root {
   --clock-face-edge:  oklch(0.860 0 0);
   --clock-rim:        oklch(0.790 0 0);
   --clock-hand:       oklch(0.110 0 0);
-  --clock-dial-shadow: inset 0 3px 8px rgba(0,0,0,0.16),
-                       inset 0 1px 3px rgba(0,0,0,0.20),
-                       inset 0 -2px 5px rgba(255,255,255,0.06);
+  --clock-dial-shadow: inset 0 3px 8px rgba(0,0,0,0.08),
+                       inset 0 1px 3px rgba(0,0,0,0.10),
+                       inset 0 -2px 5px rgba(255,255,255,0.12);
   --clock-shadow:     0 1px 4px rgba(0,0,0,0.08),
                       0 6px 24px rgba(0,0,0,0.10);
 }
 
 .dark {
-  --clock-panel:      oklch(0.082 0 0);
+  --clock-panel:      oklch(15.907% 0.00002 271.152);
   --clock-face:       oklch(0.138 0 0);
   --clock-face-edge:  oklch(0.090 0 0);
   --clock-rim:        oklch(0.220 0 0);

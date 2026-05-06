@@ -206,12 +206,21 @@ export interface KineticClockProps extends React.HTMLAttributes<HTMLDivElement> 
    * @default 700
    */
   size?: number
+  /**
+   * Theme mode.
+   * - `light`: light mode colors
+   * - `dark`: dark mode colors
+   * - `auto`: inherits from parent's `.dark` class
+   * @default "auto"
+   */
+  theme?: "light" | "dark" | "auto"
 }
 
 export function KineticClock({
   mode = "active",
   format = "24h",
   size = 700,
+  theme = "auto",
   className,
   style,
   ...rest
@@ -298,7 +307,11 @@ export function KineticClock({
 
   return (
     <div
-      className={cn("inline-block", className)}
+      className={cn(
+        "inline-block",
+        theme === "dark" ? "dark" : theme === "light" ? "light" : "",
+        className
+      )}
       style={{
         background: "var(--clock-panel)",
         borderRadius: 0,
