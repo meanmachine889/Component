@@ -178,7 +178,7 @@ const MEDIUM_CYCLE: Phase[] = ["wave", "spiral", "time"]
 
 // ─── Public component ─────────────────────────────────────────────────────────
 
-export interface ClockClock24Props extends React.HTMLAttributes<HTMLDivElement> {
+export interface KineticClockProps extends React.HTMLAttributes<HTMLDivElement> {
   /**
    * Choreography intensity.
    * - `active`: full cycle of wave → spiral → scatter → time
@@ -199,14 +199,14 @@ export interface ClockClock24Props extends React.HTMLAttributes<HTMLDivElement> 
   size?: number
 }
 
-export function ClockClock24({
+export function KineticClock({
   mode = "active",
   format = "24h",
   size = 700,
   className,
   style,
   ...rest
-}: ClockClock24Props) {
+}: KineticClockProps) {
   const initialDigits = React.useMemo(() => getTimeDigits(format), [format])
   const [allAngles, setAllAngles] = React.useState<AllAngles>(() =>
     digitsToAngles(initialDigits)
@@ -331,4 +331,4 @@ export function ClockClock24({
   )
 }
 
-export default ClockClock24
+export default KineticClock

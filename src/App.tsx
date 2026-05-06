@@ -1,12 +1,11 @@
 import { useEffect, useState } from "react"
 import type { CSSProperties, ReactNode } from "react"
-import { ClockClock24 } from "@/components/clock-clock-24"
+import { KineticClock } from "@/components/clock-clock-24"
 
-// Update this to your deployed site URL
-const SITE_URL = "https://your-domain.com"
+const SITE_URL = "https://kinetic-clock.yxsh.in"
 const REGISTRY_URL = `${SITE_URL}/r/clock-clock-24.json`
 
-const GITHUB_URL = "https://github.com/yashbharadwaj/clock-component"
+const GITHUB_URL = "https://github.com/meanmachine889/Component"
 const COMPONENT_FILE_URL = `${GITHUB_URL}/blob/main/registry/clock-clock-24/clock-clock-24.tsx`
 
 // ── Code snippets ──────────────────────────────────────────────────────────────
@@ -37,14 +36,14 @@ const CSS_VARS = `:root {
 
 const NPM_INSTALL = `npm install clsx tailwind-merge`
 
-const USAGE_CODE = `import { ClockClock24 } from "@/components/clock-clock-24"
+const USAGE_CODE = `import { KineticClock } from "@/components/clock-clock-24"
 
 export function Page() {
   return (
-    <ClockClock24
-      mode="active"
-      format="24h"
-      size={600}
+    <KineticClock
+      mode="active"   // "active" | "medium" | "quiet"
+      format="24h"    // "24h" | "12h"
+      size={600}      // width in px
     />
   )
 }`
@@ -52,7 +51,7 @@ export function Page() {
 // ── Shared style tokens ────────────────────────────────────────────────────────
 
 const mono: CSSProperties = {
-  fontFamily: "'IBM Plex Mono', 'Courier New', monospace",
+  fontFamily: "'Geist Mono', 'Courier New', monospace",
 }
 
 const codeInline: CSSProperties = {
@@ -108,7 +107,7 @@ function CopyButton({ text }: { text: string }) {
         border: "1px solid var(--page-border)",
         borderRadius: 4,
         color: "var(--page-text-subtle)",
-        fontFamily: "'Inter', sans-serif",
+        fontFamily: "'Poppins', sans-serif",
         fontSize: 11,
         fontWeight: 500,
         letterSpacing: "-0.1px",
@@ -322,7 +321,7 @@ function App() {
     fontWeight: 500,
     letterSpacing: "-0.1px",
     cursor: "pointer",
-    fontFamily: "'Inter', sans-serif",
+    fontFamily: "'Poppins', sans-serif",
   }
 
   return (
@@ -331,7 +330,7 @@ function App() {
         background: "var(--page-bg)",
         color: "var(--page-text)",
         minHeight: "100vh",
-        fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, sans-serif",
+        fontFamily: "'Poppins', -apple-system, BlinkMacSystemFont, sans-serif",
       }}
     >
       {/* ── Nav ────────────────────────────────────────────────────────────── */}
@@ -358,7 +357,7 @@ function App() {
               color: "var(--page-text)",
             }}
           >
-            ClockClock 24
+            Kinetic Clock
           </span>
           <span
             style={{
@@ -415,29 +414,68 @@ function App() {
             letterSpacing: "-0.22px",
             lineHeight: 1.08,
             color: "var(--page-text)",
+            margin: "0 0 12px",
+          }}
+        >
+          Kinetic Clock
+        </h1>
+
+        <p
+          style={{
+            fontSize: 14,
+            fontWeight: 400,
+            letterSpacing: "-0.05px",
+            color: "var(--page-text-subtle)",
             margin: "0 0 20px",
           }}
         >
-          A clock made of clocks.
-        </h1>
+          Inspired from ClockClock 24.
+        </p>
 
         <p
           style={{
             ...bodyText,
             fontSize: 16,
             maxWidth: 480,
-            margin: "0 auto 60px",
+            margin: "0 auto 40px",
             color: "var(--page-text-muted)",
           }}
         >
-          An animated 24-clock grid that spells the current time. Cycles through
-          wave, spiral, and scatter phases. Drops into any shadcn project.
+          An animated grid of analog clocks that spells the current time. Cycles
+          through wave, spiral, and scatter phases. Drops into any shadcn project.
         </p>
+
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 20, marginBottom: 60, fontSize: 13, color: "var(--page-text-subtle)" }}>
+          <a
+            href={GITHUB_URL}
+            target="_blank"
+            rel="noreferrer"
+            style={{ color: "var(--page-text-subtle)", textDecoration: "none", transition: "color 0.15s" }}
+            onMouseEnter={(e) => (e.currentTarget.style.color = "var(--page-text)")}
+            onMouseLeave={(e) => (e.currentTarget.style.color = "var(--page-text-subtle)")}
+          >
+            ★ star on github
+          </a>
+          <span style={{ color: "var(--page-border)" }}>·</span>
+          <span>
+            made by{" "}
+            <a
+              href="https://x.com/furiyash"
+              target="_blank"
+              rel="noreferrer"
+              style={{ color: "var(--page-text-subtle)", textDecoration: "none", transition: "color 0.15s" }}
+              onMouseEnter={(e) => (e.currentTarget.style.color = "var(--page-text)")}
+              onMouseLeave={(e) => (e.currentTarget.style.color = "var(--page-text-subtle)")}
+            >
+              yash
+            </a>
+          </span>
+        </div>
 
         {/* Live demo */}
         <div style={{ overflowX: "auto", paddingBottom: 4 }}>
           <div style={{ display: "inline-block" }}>
-            <ClockClock24 mode={mode} format={format} size={700} />
+            <KineticClock mode={mode} format={format} size={700} />
           </div>
         </div>
 
@@ -477,7 +515,7 @@ function App() {
                   textTransform: "uppercase",
                   cursor: "pointer",
                   transition: "background 0.15s, color 0.15s",
-                  fontFamily: "'Inter', sans-serif",
+                  fontFamily: "'Poppins', sans-serif",
                 }}
               >
                 {m}
@@ -499,7 +537,7 @@ function App() {
               letterSpacing: "0.06em",
               textTransform: "uppercase",
               cursor: "pointer",
-              fontFamily: "'Inter', sans-serif",
+              fontFamily: "'Poppins', sans-serif",
               transition: "border-color 0.15s, color 0.15s",
             }}
           >
@@ -566,7 +604,7 @@ function App() {
                   fontWeight: 500,
                   letterSpacing: "-0.1px",
                   cursor: "pointer",
-                  fontFamily: "'Inter', sans-serif",
+                  fontFamily: "'Poppins', sans-serif",
                   transition: "background 0.15s, color 0.15s",
                 }}
               >
@@ -596,7 +634,7 @@ function App() {
 
               <Step number={3} title="Done">
                 <p style={bodyText}>
-                  Import and use <code style={codeInline}>ClockClock24</code> anywhere in your app.
+                  Import and use <code style={codeInline}>KineticClock</code> anywhere in your app.
                   The component reads <code style={codeInline}>--clock-*</code> CSS variables, so it
                   adapts to light/dark automatically.
                 </p>
@@ -727,7 +765,7 @@ function App() {
               style={{
                 width: "100%",
                 borderCollapse: "collapse",
-                fontFamily: "'Inter', sans-serif",
+                fontFamily: "'Poppins', sans-serif",
               }}
             >
               <thead>
@@ -739,13 +777,38 @@ function App() {
                 </tr>
               </thead>
               <tbody>
+                {/* mode — one prop cell spanning 3 sub-rows */}
+                <tr style={{ borderTop: "1px solid var(--page-border)" }}>
+                  <td style={tdStyle} rowSpan={3}>
+                    <code style={codeInline}>mode</code>
+                  </td>
+                  <td style={tdStyle}>
+                    <code style={{ ...codeInline, fontSize: 11 }}>"active"</code>
+                  </td>
+                  <td style={tdStyle} rowSpan={3}>
+                    <code style={codeInline}>"active"</code>
+                  </td>
+                  <td style={{ ...tdStyle, borderRight: "none", color: "var(--page-text-muted)" }}>
+                    wave → spiral → scatter → time
+                  </td>
+                </tr>
+                <tr style={{ borderTop: "1px solid var(--page-border)" }}>
+                  <td style={tdStyle}>
+                    <code style={{ ...codeInline, fontSize: 11 }}>"medium"</code>
+                  </td>
+                  <td style={{ ...tdStyle, borderRight: "none", color: "var(--page-text-muted)" }}>
+                    wave → spiral → time
+                  </td>
+                </tr>
+                <tr style={{ borderTop: "1px solid var(--page-border)" }}>
+                  <td style={tdStyle}>
+                    <code style={{ ...codeInline, fontSize: 11 }}>"quiet"</code>
+                  </td>
+                  <td style={{ ...tdStyle, borderRight: "none", color: "var(--page-text-muted)" }}>
+                    time only
+                  </td>
+                </tr>
                 {[
-                  {
-                    prop: "mode",
-                    type: '"active" | "medium" | "quiet"',
-                    def: '"active"',
-                    desc: "Choreography intensity. active: wave → spiral → scatter → time. medium: wave → spiral → time. quiet: time only.",
-                  },
                   {
                     prop: "format",
                     type: '"12h" | "24h"',
@@ -775,7 +838,7 @@ function App() {
                     key={row.prop}
                     style={{
                       borderTop: "1px solid var(--page-border)",
-                      background: i % 2 !== 0 ? "var(--page-surface)" : "transparent",
+                      background: i % 2 === 0 ? "var(--page-surface)" : "transparent",
                     }}
                   >
                     <td style={tdStyle}>
@@ -848,7 +911,7 @@ function App() {
               style={{
                 width: "100%",
                 borderCollapse: "collapse",
-                fontFamily: "'Inter', sans-serif",
+                fontFamily: "'Poppins', sans-serif",
               }}
             >
               <thead>
@@ -916,22 +979,30 @@ function App() {
             gap: 12,
           }}
         >
-          <span>ClockClock 24 — MIT license</span>
-          <a
-            href={GITHUB_URL}
-            target="_blank"
-            rel="noreferrer"
-            style={{
-              color: "var(--page-text-subtle)",
-              textDecoration: "none",
-              display: "flex",
-              alignItems: "center",
-              gap: 6,
-            }}
-          >
-            <GithubIcon />
-            yashbharadwaj/clock-component
-          </a>
+          <span>Kinetic Clock · inspired by ClockClock 24</span>
+          <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
+            {[
+              { label: "twitter", href: "https://x.com/furiyash" },
+              { label: "github", href: "https://github.com/meanmachine889" },
+              { label: "linkedin", href: "https://linkedin.com/in/yash-bharadwaj-47871b251" },
+            ].map(({ label, href }) => (
+              <a
+                key={label}
+                href={href}
+                target="_blank"
+                rel="noreferrer"
+                style={{
+                  color: "var(--page-text-subtle)",
+                  textDecoration: "none",
+                  transition: "color 0.15s",
+                }}
+                onMouseEnter={(e) => (e.currentTarget.style.color = "var(--page-text)")}
+                onMouseLeave={(e) => (e.currentTarget.style.color = "var(--page-text-subtle)")}
+              >
+                {label}
+              </a>
+            ))}
+          </div>
         </footer>
       </div>
     </div>
