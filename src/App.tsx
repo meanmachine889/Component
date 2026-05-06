@@ -50,6 +50,7 @@ export function Page() {
       mode="active"   // "active" | "medium" | "quiet"
       format="24h"    // "24h" | "12h"
       size={600}      // width in px
+      theme="auto"    // "light" | "dark" | "auto"
     />
   )
 }`
