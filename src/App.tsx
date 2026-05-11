@@ -388,6 +388,12 @@ const TwitterIcon = ({ size = 16 }) => (
   </svg>
 )
 
+const StarIcon = ({ size = 16 }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor">
+    <path d="M12 2.5l2.95 5.98 6.6.96-4.78 4.66 1.13 6.57L12 17.58l-5.9 3.09 1.13-6.57L2.45 9.44l6.6-.96L12 2.5z" />
+  </svg>
+)
+
 const ExternalIcon = ({ size = 14 }) => (
   <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
     <path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6" />
@@ -542,29 +548,72 @@ export default function App() {
             marginTop: 12,
           }}
         >
-          <a
-            href={GITHUB_URL}
-            target="_blank"
-            rel="noreferrer"
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: 8,
-              padding: "10px 24px",
-              background: "var(--page-text)",
-              color: "var(--page-bg)",
-              borderRadius: 100,
-              textDecoration: "none",
-              fontSize: 14,
-              fontWeight: 500,
-              transition: "transform 0.2s ease",
-            }}
-            onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.02)")}
-            onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
-          >
-            <GithubIcon size={18} />
-            Star on GitHub
-          </a>
+          <div style={{ display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap", justifyContent: "center" }}>
+            <a
+              href={GITHUB_URL}
+              target="_blank"
+              rel="noreferrer"
+              aria-label="Star on GitHub"
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                height: 56,
+                background: "transparent",
+                color: "var(--page-text)",
+                border: "1px solid var(--page-border)",
+                borderRadius: 12,
+                textDecoration: "none",
+                overflow: "hidden",
+                transition: "transform 0.2s ease, border-color 0.2s ease",
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = "scale(1.02)"
+                e.currentTarget.style.borderColor = "var(--page-text-muted)"
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = "scale(1)"
+                e.currentTarget.style.borderColor = "var(--page-border)"
+              }}
+            >
+              <span
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  width: 56,
+                  height: 56,
+                  background: "var(--page-surface-2)",
+                  borderRight: "1px solid var(--page-border)",
+                }}
+              >
+                <GithubIcon size={22} />
+              </span>
+              <span
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  padding: "0 18px",
+                  color: "#F5B800",
+                }}
+              >
+                <StarIcon size={18} />
+              </span>
+            </a>
+
+            <a
+              href="https://peerlist.io/furiyash/project/kinetic-clock"
+              target="_blank"
+              rel="noreferrer"
+              style={{ display: "inline-block", lineHeight: 0 }}
+            >
+              <img
+                src={`https://peerlist.io/api/v1/projects/embed/PRJHJKN9PMBRP67693MGRK7GEJLR9G?showUpvote=true&theme=${theme}`}
+                alt="Kinetic Clock on Peerlist"
+                style={{ width: "auto", height: 56 }}
+              />
+            </a>
+          </div>
 
           <CodeBlock label="Add component" code={CLI_ADD} />
         </div>
