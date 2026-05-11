@@ -22,8 +22,9 @@
     "noFallthroughCasesInSwitch": true,
 
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./src/*"],
+      "@registry/*": ["./registry/*"]
     }
   },
-  "include": ["src"]
+  "include": ["src", "registry"]
 }

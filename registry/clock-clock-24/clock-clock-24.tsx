@@ -121,9 +121,27 @@ function ClockFace({ hand1Angle, hand2Angle, size }: ClockFaceProps) {
 
 // ─── Time + choreography ──────────────────────────────────────────────────────
 
-function getTimeDigits(format: "12h" | "24h", now: Date = new Date()): number[] {
-  let h = now.getHours()
-  const m = now.getMinutes()
+function getZonedHM(timeZone?: string): { h: number; m: number } {
+  const now = new Date()
+  if (!timeZone) return { h: now.getHours(), m: now.getMinutes() }
+  // Intl path — throws on invalid IANA names; fall back to local time.
+  try {
+    const parts = new Intl.DateTimeFormat("en-US", {
+      timeZone,
+      hour12: false,
+      hour: "2-digit",
+      minute: "2-digit",
+    }).formatToParts(now)
+    const h = parseInt(parts.find((p) => p.type === "hour")?.value ?? "0", 10)
+    const m = parseInt(parts.find((p) => p.type === "minute")?.value ?? "0", 10)
+    return { h: h % 24, m }
+  } catch {
+    return { h: now.getHours(), m: now.getMinutes() }
+  }
+}
+
+function getTimeDigits(format: "12h" | "24h", timeZone?: string): number[] {
+  let { h, m } = getZonedHM(timeZone)
   if (format === "12h") h = h % 12 || 12
   const hh = String(h).padStart(2, "0")
   const mm = String(m).padStart(2, "0")
@@ -214,6 +232,11 @@ export interface KineticClockProps extends React.HTMLAttributes<HTMLDivElement> 
    * @default "auto"
    */
   theme?: "light" | "dark" | "auto"
+  /**
+   * IANA timezone name (e.g. `"America/New_York"`, `"Asia/Tokyo"`).
+   * When omitted, the viewer's local time is used.
+   */
+  timeZone?: string
 }
 
 export function KineticClock({
@@ -221,11 +244,15 @@ export function KineticClock({
   format = "24h",
   size = 700,
   theme = "auto",
+  timeZone,
   className,
   style,
   ...rest
 }: KineticClockProps) {
-  const initialDigits = React.useMemo(() => getTimeDigits(format), [format])
+  const initialDigits = React.useMemo(
+    () => getTimeDigits(format, timeZone),
+    [format, timeZone]
+  )
   const [allAngles, setAllAngles] = React.useState<AllAngles>(() =>
     digitsToAngles(initialDigits)
   )
@@ -234,6 +261,7 @@ export function KineticClock({
   const phaseStartRef = React.useRef<number>(Date.now())
   const scatterSeedRef = React.useRef<number>(1)
   const rafRef = React.useRef<number>(0)
+  const lastMinuteRef = React.useRef<number>(getZonedHM(timeZone).m)
 
   // Layout math: 4 digit columns × 2 clocks each = 8 columns + 7 inter-clock gaps.
   const gap = size * 0.022
@@ -244,11 +272,26 @@ export function KineticClock({
   React.useEffect(() => {
     const tick = () => {
       if (mode === "quiet") {
-        setAllAngles(digitsToAngles(getTimeDigits(format)))
+        const minute = getZonedHM(timeZone).m
+        if (minute !== lastMinuteRef.current) {
+          lastMinuteRef.current = minute
+          setAllAngles(digitsToAngles(getTimeDigits(format, timeZone)))
+        }
         return
       }
 
       const now = Date.now()
+      const currentMinute = getZonedHM(timeZone).m
+      // If the minute changed mid-animation, break out to the time phase so
+      // the new minute is reflected immediately.
+      if (
+        currentMinute !== lastMinuteRef.current &&
+        phaseRef.current !== "time"
+      ) {
+        phaseRef.current = "time"
+        phaseStartRef.current = now
+      }
+
       const elapsed = (now - phaseStartRef.current) / 1000
       const cycle = mode === "active" ? ACTIVE_CYCLE : MEDIUM_CYCLE
 
@@ -272,7 +315,8 @@ export function KineticClock({
       const phase = phaseRef.current
 
       if (phase === "time") {
-        setAllAngles(digitsToAngles(getTimeDigits(format)))
+        lastMinuteRef.current = currentMinute
+        setAllAngles(digitsToAngles(getTimeDigits(format, timeZone)))
       } else if (phase === "wave") {
         setAllAngles(waveAngles(t))
       } else if (phase === "spiral") {
@@ -283,8 +327,9 @@ export function KineticClock({
     }
 
     if (mode === "quiet") {
-      tick()
-      const interval = setInterval(tick, 5000)
+      lastMinuteRef.current = getZonedHM(timeZone).m
+      setAllAngles(digitsToAngles(getTimeDigits(format, timeZone)))
+      const interval = setInterval(tick, 1000)
       return () => clearInterval(interval)
     }
 
@@ -292,6 +337,7 @@ export function KineticClock({
     // Restart cycle when mode flips so the new cycle starts cleanly.
     phaseRef.current = "time"
     phaseStartRef.current = Date.now()
+    lastMinuteRef.current = getZonedHM(timeZone).m
 
     const loop = () => {
       if (!running) return
@@ -303,7 +349,7 @@ export function KineticClock({
       running = false
       cancelAnimationFrame(rafRef.current)
     }
-  }, [mode, format])
+  }, [mode, format, timeZone])
 
   return (
     <div
@@ -321,7 +367,7 @@ export function KineticClock({
         ...style,
       }}
       role="img"
-      aria-label={`Clock display, ${format} format, ${mode} mode`}
+      aria-label={`Clock display, ${format} format, ${mode} mode${timeZone ? `, ${timeZone}` : ""}`}
       {...rest}
     >
       <div

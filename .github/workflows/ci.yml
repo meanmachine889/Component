@@ -1,0 +1,40 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Build (regenerates public/r/*.json from registry/, then vite build)
+        run: npm run build
+
+      - name: Verify registry JSON is in sync with committed copy
+        run: |
+          if ! git diff --quiet -- public/r; then
+            echo "::error::public/r/*.json is out of sync with registry/. Run 'npm run build' locally and commit the result."
+            git --no-pager diff -- public/r
+            exit 1
+          fi
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist
+          retention-days: 7

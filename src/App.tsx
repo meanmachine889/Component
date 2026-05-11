@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import type { CSSProperties, ReactNode } from "react"
-import { KineticClock } from "@/components/clock-clock-24"
+import { KineticClock } from "@registry/clock-clock-24/clock-clock-24"
 
 const SITE_URL = "https://kinetic-clock.yxsh.in"
 const REGISTRY_URL = `${SITE_URL}/r/clock-clock-24.json`
@@ -12,9 +12,18 @@ const COMPONENT_FILE_URL = `${GITHUB_URL}/blob/main/registry/clock-clock-24/cloc
 
 // ── Shared Constants ─────────────────────────────────────────────────────────
 
+const NAMESPACE = "@kinetic"
+const REGISTRY_NAME = "clock-clock-24"
 const CLI_INIT = `npx shadcn@latest init`
-const CLI_ADD = `npx shadcn@latest add ${REGISTRY_URL}`
+const CLI_ADD = `npx shadcn@latest add ${NAMESPACE}/${REGISTRY_NAME}`
+const CLI_ADD_URL = `npx shadcn@latest add ${REGISTRY_URL}`
 const NPM_INSTALL = `npm install clsx tailwind-merge`
+
+const REGISTRIES_SNIPPET = `{
+  "registries": {
+    "${NAMESPACE}": "${SITE_URL}/r/{name}.json"
+  }
+}`
 
 const CSS_VARS = `:root {
   --clock-panel:      oklch(0.965 0 0);
@@ -47,13 +56,24 @@ const USAGE_CODE = `import { KineticClock } from "@/components/clock-clock-24"
 export function Page() {
   return (
     <KineticClock
-      mode="active"   // "active" | "medium" | "quiet"
-      format="24h"    // "24h" | "12h"
-      size={600}      // width in px
-      theme="auto"    // "light" | "dark" | "auto"
+      mode="active"            // "active" | "medium" | "quiet"
+      format="24h"             // "24h" | "12h"
+      size={600}               // width in px
+      theme="auto"             // "light" | "dark" | "auto"
+      timeZone="Asia/Kolkata"  // any IANA name; omit for viewer's local time
     />
   )
 }`
+
+const TIMEZONE_OPTIONS: { label: string; value: string | undefined }[] = [
+  { label: "Local", value: undefined },
+  { label: "New York", value: "America/New_York" },
+  { label: "London", value: "Europe/London" },
+  { label: "Berlin", value: "Europe/Berlin" },
+  { label: "Kolkata", value: "Asia/Kolkata" },
+  { label: "Tokyo", value: "Asia/Tokyo" },
+  { label: "Sydney", value: "Australia/Sydney" },
+]
 
 // ── Shared Styles ────────────────────────────────────────────────────────────
 
@@ -68,26 +88,6 @@ const codeInline: CSSProperties = {
   borderRadius: 4,
   background: "var(--page-surface-2)",
   border: "1px solid var(--page-border)",
-  color: "var(--page-text-muted)",
-}
-
-const thStyle: CSSProperties = {
-  padding: "12px 16px",
-  textAlign: "left",
-  fontWeight: 400,
-  fontSize: 11,
-  letterSpacing: "0.06em",
-  textTransform: "uppercase",
-  color: "var(--page-text-subtle)",
-  borderRight: "1px solid var(--page-border)",
-}
-
-const tdStyle: CSSProperties = {
-  padding: "14px 16px",
-  verticalAlign: "top",
-  borderRight: "1px solid var(--page-border)",
-  lineHeight: 1.5,
-  fontSize: 13,
   color: "var(--page-text-muted)",
 }
 
@@ -226,6 +226,110 @@ function CodeBlock({ label, code }: { label?: string; code: string }) {
   )
 }
 
+type PropDef = {
+  name: string
+  type: string
+  default: string
+  description: string
+  values?: { label: string; description: string }[]
+}
+
+const PROPS: PropDef[] = [
+  {
+    name: "mode",
+    type: `"active" | "medium" | "quiet"`,
+    default: `"active"`,
+    description:
+      "Choreography intensity. Controls which animation phases the clocks cycle through between time displays.",
+    values: [
+      { label: `"active"`, description: "Wave → Spiral → Scatter → Time. Full motion cycle." },
+      { label: `"medium"`, description: "Wave → Spiral → Time. Skips the scatter phase." },
+      { label: `"quiet"`, description: "Always shows the time. No animation phases." },
+    ],
+  },
+  {
+    name: "format",
+    type: `"12h" | "24h"`,
+    default: `"24h"`,
+    description: "Time format displayed by the clock grid.",
+  },
+  {
+    name: "size",
+    type: "number",
+    default: "700",
+    description:
+      "Outer width in pixels. Each individual clock face is sized off this; height derives from the layout.",
+  },
+  {
+    name: "theme",
+    type: `"light" | "dark" | "auto"`,
+    default: `"auto"`,
+    description:
+      "Color palette. \"auto\" inherits from a parent's `.dark` class, so it follows your existing theme switcher.",
+  },
+  {
+    name: "timeZone",
+    type: "string",
+    default: "undefined",
+    description:
+      'IANA timezone name (e.g. "America/New_York", "Asia/Tokyo"). When omitted, the viewer\'s local time is used. Invalid names silently fall back to local.',
+  },
+]
+
+function PropCard({ prop }: { prop: PropDef }) {
+  return (
+    <div
+      style={{
+        border: "1px solid var(--page-border)",
+        borderRadius: 16,
+        padding: "20px 22px",
+        display: "flex",
+        flexDirection: "column",
+        gap: 14,
+        background: "var(--page-surface)",
+      }}
+    >
+      <div style={{ display: "flex", alignItems: "baseline", gap: 12, flexWrap: "wrap" }}>
+        <code style={{ ...mono, fontSize: 16, color: "var(--page-text)", fontWeight: 500 }}>
+          {prop.name}
+        </code>
+        <code style={{ ...mono, fontSize: 12, color: "var(--page-text-muted)" }}>{prop.type}</code>
+        <span style={{ marginLeft: "auto", fontSize: 11, color: "var(--page-text-subtle)", letterSpacing: "0.04em", textTransform: "uppercase" }}>
+          default <code style={{ ...mono, fontSize: 12, color: "var(--page-text-muted)", textTransform: "none", letterSpacing: 0, marginLeft: 6 }}>{prop.default}</code>
+        </span>
+      </div>
+      <p style={{ fontSize: 14, lineHeight: 1.6, color: "var(--page-text-muted)", margin: 0 }}>
+        {prop.description}
+      </p>
+      {prop.values && (
+        <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: 8 }}>
+          {prop.values.map((v) => (
+            <li
+              key={v.label}
+              style={{
+                display: "flex",
+                gap: 12,
+                alignItems: "baseline",
+                padding: "8px 12px",
+                borderRadius: 8,
+                background: "var(--page-surface-2)",
+                border: "1px solid var(--page-border)",
+              }}
+            >
+              <code style={{ ...mono, fontSize: 12, color: "var(--page-text)", flexShrink: 0, minWidth: 80 }}>
+                {v.label}
+              </code>
+              <span style={{ fontSize: 13, color: "var(--page-text-muted)", lineHeight: 1.5 }}>
+                {v.description}
+              </span>
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
+  )
+}
+
 function Step({ number, title, children }: { number: number; title: string; children: ReactNode }) {
   return (
     <div style={{ display: "flex", gap: 16 }}>
@@ -316,6 +420,7 @@ export default function App() {
   const [theme, setTheme] = useState<"dark" | "light">("light")
   const [mode, setMode] = useState<"active" | "medium" | "quiet">("active")
   const [format, setFormat] = useState<"12h" | "24h">("24h")
+  const [timeZone, setTimeZone] = useState<string | undefined>(undefined)
   const [installTab, setInstallTab] = useState<"cli" | "manual">("cli")
 
   useEffect(() => {
@@ -415,12 +520,15 @@ export default function App() {
           style={{
             fontSize: 18,
             color: "var(--page-text-muted)",
-            maxWidth: 500,
-            lineHeight: 1.5,
+            maxWidth: 560,
+            lineHeight: 1.55,
             fontWeight: 400,
           }}
         >
-          A minimalist animated grid of analog clocks that spells the time. Inspired by ClockClock 24.
+          A grid of 24 analog clocks that choreograph their hands to spell the
+          current time. Three motion intensities, 12h or 24h, any IANA
+          timezone, and a built-in light/dark theme. Drop it into any React app
+          with a single component. Inspired by ClockClock 24.
         </p>
 
         <div
@@ -480,10 +588,10 @@ export default function App() {
           }}
         >
           <div style={{ transform: windowWidth < 600 ? "scale(0.8)" : "scale(0.9)", transformOrigin: "center" }}>
-            <KineticClock mode={mode} format={format} size={clockSize} />
+            <KineticClock mode={mode} format={format} size={clockSize} timeZone={timeZone} />
           </div>
 
-          <div style={{ display: "flex", gap: 16 }}>
+          <div style={{ display: "flex", gap: 16, flexWrap: "wrap", justifyContent: "center" }}>
             <div
               style={{
                 display: "flex",
@@ -530,6 +638,30 @@ export default function App() {
             >
               {format}
             </button>
+
+            <select
+              value={timeZone ?? ""}
+              onChange={(e) => setTimeZone(e.target.value === "" ? undefined : e.target.value)}
+              style={{
+                padding: "10px 16px",
+                borderRadius: 14,
+                border: "1px solid var(--page-border)",
+                background: "var(--page-bg)",
+                color: "var(--page-text)",
+                fontSize: 12,
+                fontWeight: 500,
+                cursor: "pointer",
+                appearance: "none",
+                ...mono,
+              }}
+              aria-label="Timezone"
+            >
+              {TIMEZONE_OPTIONS.map((tz) => (
+                <option key={tz.label} value={tz.value ?? ""}>
+                  {tz.label}
+                </option>
+              ))}
+            </select>
           </div>
         </div>
       </section>
@@ -569,12 +701,22 @@ export default function App() {
             <div style={{ display: "flex", flexDirection: "column", gap: 32 }}>
               <Step number={1} title="Initialize shadcn">
                 <p style={{ color: "var(--page-text-muted)", fontSize: 14 }}>
-                  Ensure your project is set up with Tailwind CSS and shadcn/ui.
+                  Skip if your project already has shadcn/ui set up.
                 </p>
                 <CodeBlock code={CLI_INIT} />
               </Step>
-              <Step number={2} title="Add the component">
+              <Step number={2} title={`Register the ${NAMESPACE} namespace`}>
+                <p style={{ color: "var(--page-text-muted)", fontSize: 14 }}>
+                  Add this once to your project's <code style={codeInline}>components.json</code>. After this you can install any <code style={codeInline}>{NAMESPACE}</code> component by name.
+                </p>
+                <CodeBlock label="components.json" code={REGISTRIES_SNIPPET} />
+              </Step>
+              <Step number={3} title="Add the component">
                 <CodeBlock code={CLI_ADD} />
+                <p style={{ color: "var(--page-text-subtle)", fontSize: 12, marginTop: 4 }}>
+                  Prefer not to register the namespace? Use the full URL form:
+                </p>
+                <CodeBlock code={CLI_ADD_URL} />
               </Step>
             </div>
           ) : (
@@ -628,53 +770,12 @@ export default function App() {
         <section>
           <h2 style={{ fontSize: 28, fontWeight: 400, marginBottom: 12, letterSpacing: "-0.5px" }}>Reference</h2>
           <p style={{ color: "var(--page-text-muted)", fontSize: 16, marginBottom: 32 }}>
-            Properties available for the <code style={codeInline}>KineticClock</code> component.
+            All props on the <code style={codeInline}>KineticClock</code> component. Every prop is optional — the defaults match the demo above.
           </p>
-          <div style={{ overflowX: "auto", border: "1px solid var(--page-border)", borderRadius: 16 }}>
-            <table style={{ width: "100%", minWidth: 600, borderCollapse: "collapse" }}>
-              <thead>
-                <tr style={{ background: "var(--page-surface)" }}>
-                  <th style={thStyle}>Prop</th>
-                  <th style={thStyle}>Type</th>
-                  <th style={thStyle}>Default</th>
-                  <th style={{ ...thStyle, borderRight: "none" }}>Description</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr style={{ borderTop: "1px solid var(--page-border)" }}>
-                  <td style={tdStyle} rowSpan={3}><code style={codeInline}>mode</code></td>
-                  <td style={tdStyle}><code style={codeInline}>"active"</code></td>
-                  <td style={tdStyle} rowSpan={3}><code style={codeInline}>"active"</code></td>
-                  <td style={{ ...tdStyle, borderRight: "none" }}>Wave → Spiral → Scatter → Time</td>
-                </tr>
-                <tr style={{ borderTop: "1px solid var(--page-border)" }}>
-                  <td style={tdStyle}><code style={codeInline}>"medium"</code></td>
-                  <td style={{ ...tdStyle, borderRight: "none" }}>Wave → Spiral → Time</td>
-                </tr>
-                <tr style={{ borderTop: "1px solid var(--page-border)" }}>
-                  <td style={tdStyle}><code style={codeInline}>"quiet"</code></td>
-                  <td style={{ ...tdStyle, borderRight: "none" }}>Time only</td>
-                </tr>
-                <tr style={{ borderTop: "1px solid var(--page-border)" }}>
-                  <td style={tdStyle}><code style={codeInline}>format</code></td>
-                  <td style={tdStyle}><code style={codeInline}>"12h" | "24h"</code></td>
-                  <td style={tdStyle}><code style={codeInline}>"24h"</code></td>
-                  <td style={{ ...tdStyle, borderRight: "none" }}>Time format displayed by the clock grid.</td>
-                </tr>
-                <tr style={{ borderTop: "1px solid var(--page-border)" }}>
-                  <td style={tdStyle}><code style={codeInline}>size</code></td>
-                  <td style={tdStyle}><code style={codeInline}>number</code></td>
-                  <td style={tdStyle}><code style={codeInline}>700</code></td>
-                  <td style={{ ...tdStyle, borderRight: "none" }}>Outer width in pixels. Height derives from layout.</td>
-                </tr>
-                <tr style={{ borderTop: "1px solid var(--page-border)" }}>
-                  <td style={tdStyle}><code style={codeInline}>theme</code></td>
-                  <td style={tdStyle}><code style={codeInline}>"light" | "dark" | "auto"</code></td>
-                  <td style={tdStyle}><code style={codeInline}>"auto"</code></td>
-                  <td style={{ ...tdStyle, borderRight: "none" }}>Forces a specific theme or inherits from parent's .dark class.</td>
-                </tr>
-              </tbody>
-            </table>
+          <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+            {PROPS.map((p) => (
+              <PropCard key={p.name} prop={p} />
+            ))}
           </div>
         </section>
 
