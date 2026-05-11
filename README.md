@@ -34,7 +34,8 @@ export default function Page() {
     <KineticClock 
       mode="active" 
       format="24h" 
-      size={700} 
+      size={700}
+      theme="auto"
     />
   )
 }
