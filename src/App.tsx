@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import type { CSSProperties, ReactNode } from "react"
+import type { ComponentType, CSSProperties, ReactNode } from "react"
 import { KineticClock } from "@registry/clock-clock-24/clock-clock-24"
 
 const SITE_URL = "https://kinetic-clock.yxsh.in"
@@ -133,7 +133,9 @@ function CopyButton({ text }: { text: string }) {
   )
 }
 
-function NavLink({ href, children, icon: Icon }: { href: string; children: ReactNode; icon?: any }) {
+type IconComponent = ComponentType<{ size?: number }>
+
+function NavLink({ href, children, icon: Icon }: { href: string; children: ReactNode; icon?: IconComponent }) {
   return (
     <a
       href={href}

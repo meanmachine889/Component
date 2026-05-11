@@ -41,10 +41,22 @@ function ClockFace({ hand1Angle, hand2Angle, size }: ClockFaceProps) {
   const uid = React.useId().replace(/:/g, "")
 
   // Track accumulated rotation so CSS transitions always take the short path.
-  const acc1 = React.useRef<number>(hand1Angle)
-  const acc2 = React.useRef<number>(hand2Angle)
-  acc1.current = shortestRotation(acc1.current, hand1Angle)
-  acc2.current = shortestRotation(acc2.current, hand2Angle)
+  // Documented React pattern: store previous prop alongside derived state and
+  // adjust during render — React bails out the redundant render after the
+  // setState matches.
+  const [acc1, setAcc1] = React.useState<number>(hand1Angle)
+  const [prevHand1, setPrevHand1] = React.useState<number>(hand1Angle)
+  if (hand1Angle !== prevHand1) {
+    setPrevHand1(hand1Angle)
+    setAcc1((prev) => shortestRotation(prev, hand1Angle))
+  }
+
+  const [acc2, setAcc2] = React.useState<number>(hand2Angle)
+  const [prevHand2, setPrevHand2] = React.useState<number>(hand2Angle)
+  if (hand2Angle !== prevHand2) {
+    setPrevHand2(hand2Angle)
+    setAcc2((prev) => shortestRotation(prev, hand2Angle))
+  }
 
   const r = size / 2
   const handWidth = size * 0.10
@@ -84,7 +96,7 @@ function ClockFace({ hand1Angle, hand2Angle, size }: ClockFaceProps) {
 
         <circle cx={r} cy={r} r={r} fill={`url(#face-${uid})`} />
 
-        <g style={handStyle(acc1.current)}>
+        <g style={handStyle(acc1)}>
           <line
             x1={r} y1={r} x2={r} y2={r - handLen}
             stroke="var(--clock-hand)"
@@ -93,7 +105,7 @@ function ClockFace({ hand1Angle, hand2Angle, size }: ClockFaceProps) {
           />
         </g>
 
-        <g style={handStyle(acc2.current)}>
+        <g style={handStyle(acc2)}>
           <line
             x1={r} y1={r} x2={r} y2={r - handLen}
             stroke="var(--clock-hand)"
@@ -141,8 +153,8 @@ function getZonedHM(timeZone?: string): { h: number; m: number } {
 }
 
 function getTimeDigits(format: "12h" | "24h", timeZone?: string): number[] {
-  let { h, m } = getZonedHM(timeZone)
-  if (format === "12h") h = h % 12 || 12
+  const { h: rawH, m } = getZonedHM(timeZone)
+  const h = format === "12h" ? (rawH % 12 || 12) : rawH
   const hh = String(h).padStart(2, "0")
   const mm = String(m).padStart(2, "0")
   return [+hh[0], +hh[1], +mm[0], +mm[1]]
@@ -258,10 +270,12 @@ export function KineticClock({
   )
 
   const phaseRef = React.useRef<Phase>("time")
-  const phaseStartRef = React.useRef<number>(Date.now())
+  // Initialized to 0 / -1 sentinels; the effect below sets real values on
+  // mount. useRef cannot call impure functions like Date.now() inline.
+  const phaseStartRef = React.useRef<number>(0)
   const scatterSeedRef = React.useRef<number>(1)
   const rafRef = React.useRef<number>(0)
-  const lastMinuteRef = React.useRef<number>(getZonedHM(timeZone).m)
+  const lastMinuteRef = React.useRef<number>(-1)
 
   // Layout math: 4 digit columns × 2 clocks each = 8 columns + 7 inter-clock gaps.
   const gap = size * 0.022
