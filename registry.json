@@ -37,6 +37,21 @@
           "clock-shadow": "0 1px 2px rgba(0,0,0,0.35), 0 8px 24px rgba(0,0,0,0.50)"
         }
       }
+    },
+    {
+      "name": "led-clock",
+      "type": "registry:component",
+      "title": "LED Clock",
+      "description": "A digital LED-style alarm clock with seven-segment HH:MM, blinking colon, and a side panel for month, date, and day of week. No theming hooks — fixed black panel with icy-blue segments and an off-white bezel.",
+      "dependencies": [],
+      "registryDependencies": [],
+      "files": [
+        {
+          "path": "registry/led-clock/led-clock.tsx",
+          "type": "registry:component",
+          "target": "components/led-clock.tsx"
+        }
+      ]
     }
   ]
 }

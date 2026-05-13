@@ -1,0 +1,93 @@
+import { hrefFor } from "@/lib/useHashRoute"
+import type { ShowcaseEntry } from "@/showcase/types"
+
+export function Card({ entry }: { entry: ShowcaseEntry }) {
+  const { Preview, name, tagline, status, slug } = entry
+  const isComingSoon = status === "coming-soon"
+
+  return (
+    <a
+      href={hrefFor(slug)}
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        textDecoration: "none",
+        color: "inherit",
+        background: "var(--page-surface)",
+        borderRadius: 20,
+        overflow: "hidden",
+        transition: "transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease",
+        cursor: "pointer",
+      }}
+      onMouseEnter={(e) => {
+        e.currentTarget.style.transform = "translateY(-2px)"
+      }}
+      onMouseLeave={(e) => {
+        e.currentTarget.style.transform = "translateY(0)"
+        e.currentTarget.style.boxShadow = "none"
+      }}
+    >
+      <div
+        style={{
+          width: "100%",
+          background: "var(--page-surface-2)",
+          padding: 32,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <Preview />
+      </div>
+
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          background: "var(--page-surface-2)",
+          gap: 10,
+          padding: "0px 32px 32px",
+        }}
+      >
+        <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+          <h3
+            style={{
+              fontSize: 20,
+              fontWeight: 500,
+              letterSpacing: "-0.3px",
+              color: "var(--page-text)",
+              margin: 0,
+            }}
+          >
+            {name}
+          </h3>
+          {isComingSoon && (
+            <span
+              style={{
+                fontSize: 10,
+                letterSpacing: "0.08em",
+                textTransform: "uppercase",
+                color: "var(--page-text-subtle)",
+                border: "1px solid var(--page-border)",
+                padding: "2px 8px",
+                borderRadius: 100,
+              }}
+            >
+              Soon
+            </span>
+          )}
+        </div>
+        <p
+          style={{
+            fontSize: 14,
+            color: "var(--page-text-muted)",
+            lineHeight: 1.55,
+            margin: 0,
+          }}
+        >
+          {tagline}
+        </p>
+      </div>
+    </a>
+  )
+}
