@@ -95,7 +95,3 @@ npm run lint           # Lint
 The component source lives in `registry/clock-clock-24/clock-clock-24.tsx`. The demo site imports directly from there — no duplicate file, no drift.
 
 ---
-
-## License
-
-MIT
