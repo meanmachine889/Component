@@ -17,6 +17,7 @@ export function Demo({ windowWidth }: DemoContext) {
   const [mode, setMode] = useState<"active" | "medium" | "quiet">("active")
   const [format, setFormat] = useState<"12h" | "24h">("24h")
   const [timeZone, setTimeZone] = useState<string | undefined>(undefined)
+  const [theme, setTheme] = useState<"light" | "dark">("light")
 
   const clockSize = Math.min(windowWidth - 64, 700)
 
@@ -31,7 +32,7 @@ export function Demo({ windowWidth }: DemoContext) {
       }}
     >
       <div style={{ transform: windowWidth < 600 ? "scale(0.8)" : "scale(0.9)", transformOrigin: "center" }}>
-        <KineticClock mode={mode} format={format} size={clockSize} timeZone={timeZone} />
+        <KineticClock mode={mode} format={format} size={clockSize} timeZone={timeZone} theme={theme} />
       </div>
 
       <div style={{ display: "flex", gap: 16, flexWrap: "wrap", justifyContent: "center" }}>
@@ -81,6 +82,37 @@ export function Demo({ windowWidth }: DemoContext) {
         >
           {format}
         </button>
+
+        <div
+          style={{
+            display: "flex",
+            background: "var(--page-surface-2)",
+            padding: 4,
+            borderRadius: 14,
+            border: "1px solid var(--page-border)",
+          }}
+        >
+          {(["light", "dark"] as const).map((t) => (
+            <button
+              key={t}
+              onClick={() => setTheme(t)}
+              style={{
+                padding: "8px 18px",
+                borderRadius: 10,
+                border: "none",
+                background: theme === t ? "var(--page-bg)" : "transparent",
+                color: theme === t ? "var(--page-text)" : "var(--page-text-muted)",
+                fontSize: 12,
+                fontWeight: 500,
+                cursor: "pointer",
+                transition: "all 0.2s ease",
+                boxShadow: theme === t ? "0 2px 4px rgba(0,0,0,0.05)" : "none",
+              }}
+            >
+              {t.charAt(0).toUpperCase() + t.slice(1)}
+            </button>
+          ))}
+        </div>
 
         <select
           value={timeZone ?? ""}

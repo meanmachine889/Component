@@ -96,6 +96,7 @@ export const clockClock24: ShowcaseEntry = {
   tagline:
     "A grid of 24 analog clocks that choreograph their hands to spell the current time. Inspired by ClockClock 24.",
   status: "ready",
+  supportsTheme: true,
   Demo,
   Preview,
   componentName: "KineticClock",

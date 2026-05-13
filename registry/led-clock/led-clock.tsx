@@ -9,6 +9,31 @@ export type LedClockProps = {
   format?: "12h" | "24h"
   /** Whether to render the date / day-of-week side panel. */
   showDate?: boolean
+  /** IANA timezone name (e.g. "America/New_York"). Omit for viewer's local time. */
+  timeZone?: string
+}
+
+function getZonedDate(timeZone?: string): Date {
+  if (!timeZone) return new Date()
+  try {
+    const parts = new Intl.DateTimeFormat("en-US", {
+      timeZone,
+      hour12: false,
+      year: "numeric", month: "2-digit", day: "2-digit",
+      hour: "2-digit", minute: "2-digit", second: "2-digit",
+      weekday: "short",
+    }).formatToParts(new Date())
+    const get = (type: string) => parts.find((p) => p.type === type)?.value ?? "0"
+    const date = new Date()
+    date.setFullYear(parseInt(get("year")), parseInt(get("month")) - 1, parseInt(get("day")))
+    date.setHours(parseInt(get("hour")) % 24, parseInt(get("minute")), parseInt(get("second")), 0)
+    // store day index via weekday name
+    const dayMap: Record<string, number> = { Sun: 0, Mon: 1, Tue: 2, Wed: 3, Thu: 4, Fri: 5, Sat: 6 }
+    ;(date as Date & { _zonedDay?: number })._zonedDay = dayMap[get("weekday")] ?? date.getDay()
+    return date
+  } catch {
+    return new Date()
+  }
 }
 
 const ACTIVE = "#bcd9f5"
@@ -107,17 +132,17 @@ function DigitGroup({ text, height, gap }: { text: string; height: number; gap: 
   )
 }
 
-export function LedClock({ size = 600, format = "24h", showDate = true }: LedClockProps) {
-  const [now, setNow] = useState(() => new Date())
+export function LedClock({ size = 600, format = "24h", showDate = true, timeZone }: LedClockProps) {
+  const [now, setNow] = useState(() => getZonedDate(timeZone))
   const [colonOn, setColonOn] = useState(true)
 
   useEffect(() => {
     const id = setInterval(() => {
-      setNow(new Date())
+      setNow(getZonedDate(timeZone))
       setColonOn((c) => !c)
     }, 500)
     return () => clearInterval(id)
-  }, [])
+  }, [timeZone])
 
   const hours24 = now.getHours()
   const hours = format === "12h" ? ((hours24 + 11) % 12) + 1 : hours24
@@ -126,7 +151,8 @@ export function LedClock({ size = 600, format = "24h", showDate = true }: LedClo
   const month = now.getMonth() + 1
   const date = now.getDate()
   const dayNames = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"]
-  const dayName = dayNames[now.getDay()]
+  const zonedDay = (now as Date & { _zonedDay?: number })._zonedDay ?? now.getDay()
+  const dayName = dayNames[zonedDay]
 
   const aspectRatio = 2.55
   const height = size / aspectRatio

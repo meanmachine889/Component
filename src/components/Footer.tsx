@@ -17,7 +17,7 @@ export function Footer({
       style={{
         width: "100%",
         borderTop: "1px solid var(--page-border)",
-        padding: "32px 48px",
+        padding: "32px clamp(20px, 5vw, 48px)",
         display: "flex",
         flexWrap: "wrap",
         alignItems: "center",

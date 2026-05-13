@@ -29,7 +29,7 @@ export function Step({
       >
         {number}
       </div>
-      <div style={{ display: "flex", flexDirection: "column", gap: 12, flex: 1 }}>
+      <div style={{ display: "flex", flexDirection: "column", gap: 16, flex: 1 }}>
         <h3 style={{ fontSize: 16, fontWeight: 400, color: "var(--page-text)" }}>{title}</h3>
         {children}
       </div>

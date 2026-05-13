@@ -6,23 +6,25 @@ export function CodeBlock({ label, code }: { label?: string; code: string }) {
 
   if (isSingleLine && !label) {
     return (
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          gap: 12,
-          padding: "4px 4px 4px 16px",
-          background: "var(--page-code-bg)",
-          border: "1px solid var(--page-border)",
-          borderRadius: 100,
-          fontSize: 13,
-          color: "var(--page-code-text)",
-          width: "fit-content",
-          ...mono,
-        }}
-      >
-        <span style={{ whiteSpace: "nowrap" }}>{code}</span>
-        <CopyButton text={code} />
+      <div style={{ maxWidth: "100%", overflowX: "auto" }}>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: 12,
+            padding: "4px 4px 4px 16px",
+            background: "var(--page-code-bg)",
+            border: "1px solid var(--page-border)",
+            borderRadius: 100,
+            fontSize: 13,
+            color: "var(--page-code-text)",
+            width: "fit-content",
+            ...mono,
+          }}
+        >
+          <span style={{ whiteSpace: "nowrap" }}>{code}</span>
+          <CopyButton text={code} />
+        </div>
       </div>
     )
   }

@@ -27,7 +27,7 @@ export function Showcase({ entry, demoContext }: { entry: ShowcaseEntry; demoCon
     <main
       style={{
         width: "100%",
-        padding: "32px 48px 96px",
+        padding: "clamp(20px, 4vw, 32px) clamp(20px, 5vw, 48px) clamp(48px, 8vw, 96px)",
         display: "flex",
         flexDirection: "column",
         gap: 64,
@@ -46,11 +46,11 @@ export function Showcase({ entry, demoContext }: { entry: ShowcaseEntry; demoCon
           width: "fit-content",
         }}
       >
-        ← All widgets
+        ← All components
       </a>
 
       {/* ── Header ────────────────────────────────────────────────────────── */}
-      <div className="w-full px-16">
+      <div style={{ display: "flex", flexDirection: "column", gap: 64, width: "100%" }}>
         <header style={{ display: "flex", flexDirection: "column", gap: 16, maxWidth: 760 }}>
           <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
             <h1
@@ -151,7 +151,7 @@ export function Showcase({ entry, demoContext }: { entry: ShowcaseEntry; demoCon
                 </Step>
                 <Step number={3} title="Add the component">
                   <CodeBlock code={cliAdd} />
-                  <p style={{ color: "var(--page-text-subtle)", fontSize: 12, marginTop: 4 }}>
+                  <p style={{ color: "var(--page-text-subtle)", fontSize: 12, margin: 0 }}>
                     Prefer not to register the namespace? Use the full URL form:
                   </p>
                   <CodeBlock code={cliAddUrl} />
@@ -205,7 +205,7 @@ export function Showcase({ entry, demoContext }: { entry: ShowcaseEntry; demoCon
                   })
                 }
                 return (
-                  <div style={{ display: "flex", flexDirection: "column", gap: 32 }}>
+                  <div style={{ display: "flex", flexDirection: "column", gap: 32}}>
                     {steps.map((step, i) => (
                       <Step key={i} number={i + 1} title={step.title}>
                         {step.body}

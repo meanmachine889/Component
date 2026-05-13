@@ -376,8 +376,8 @@ export function KineticClock({
         background: "var(--clock-panel)",
         borderRadius: 0,
         padding: `${paddingV}px ${paddingH}px`,
-        boxShadow: "var(--clock-shadow)",
-        transition: "background 0.4s ease, box-shadow 0.4s ease",
+        boxShadow: "0 10px 24px rgba(0,0,0,0.10), 0 2px 6px rgba(0,0,0,0.06)",
+        transition: "background 0.4s ease",
         ...style,
       }}
       role="img"

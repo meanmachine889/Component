@@ -1,6 +1,6 @@
 import { KineticClock } from "@registry/clock-clock-24/clock-clock-24"
 
-export function Preview() {
+export function Preview({ theme = "light" }: { theme?: "light" | "dark" }) {
   return (
     <div
       style={{
@@ -13,7 +13,7 @@ export function Preview() {
         pointerEvents: "none",
       }}
     >
-      <KineticClock mode="active" format="24h" size={320} />
+      <KineticClock mode="active" format="24h" size={320} theme={theme} />
     </div>
   )
 }

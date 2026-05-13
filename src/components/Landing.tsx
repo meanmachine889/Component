@@ -1,5 +1,6 @@
 import { showcaseEntries } from "@/showcase"
 import { Card } from "./Card"
+import { CodeBlock } from "./CodeBlock"
 import { GithubIcon, StarIcon } from "./icons"
 
 export function Landing({
@@ -19,7 +20,7 @@ export function Landing({
     <main
       style={{
         width: "100%",
-        padding: "64px 48px 96px",
+        padding: "clamp(32px, 6vw, 64px) clamp(20px, 5vw, 48px) clamp(48px, 8vw, 96px)",
         display: "flex",
         flexDirection: "column",
         gap: 48,
@@ -120,6 +121,21 @@ export function Landing({
         </div>
       </header>
 
+      <section style={{ display: "flex", flexDirection: "column", gap: 12, maxWidth: 720 }}>
+        <h2
+          style={{
+            fontSize: 15,
+            fontWeight: 500,
+            letterSpacing: "-0.2px",
+            margin: 0,
+            color: "var(--page-text-muted)",
+          }}
+        >
+          Install any component
+        </h2>
+        <CodeBlock code="npx shadcn@latest add @kinetic/<component-name>" />
+      </section>
+
       <section style={{ display: "flex", flexDirection: "column", gap: 24 }}>
         <h2
           style={{
@@ -130,12 +146,12 @@ export function Landing({
             color: "var(--page-text)",
           }}
         >
-          Widgets
+          Components
         </h2>
         <div
           style={{
             display: "grid",
-            gridTemplateColumns: "repeat(auto-fill, minmax(400px, 1fr))",
+            gridTemplateColumns: "repeat(auto-fill, minmax(min(400px, 100%), 1fr))",
             gap: 28,
             width: "100%",
           }}

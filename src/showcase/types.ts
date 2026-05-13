@@ -22,7 +22,8 @@ export type ShowcaseEntry = {
   tagline: string
   status: "ready" | "coming-soon"
   Demo: ComponentType<DemoContext>
-  Preview: ComponentType
+  Preview: ComponentType<{ theme?: "light" | "dark" }>
+  supportsTheme?: boolean
   install?: InstallInfo
   usageCode?: string
   usageLabel?: string

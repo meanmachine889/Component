@@ -1,6 +1,7 @@
 import { LedClock } from "@registry/led-clock/led-clock"
 
-export function Preview() {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export function Preview(_props: { theme?: "light" | "dark" }) {
   return (
     <div
       style={{

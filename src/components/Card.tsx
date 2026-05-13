@@ -1,9 +1,16 @@
+import { useState } from "react"
 import { hrefFor } from "@/lib/useHashRoute"
 import type { ShowcaseEntry } from "@/showcase/types"
 
+const SWATCHES: { key: "dark" | "light"; circleBg: string; border: string }[] = [
+  { key: "dark",  circleBg: "#0a0a0a", border: "transparent" },
+  { key: "light", circleBg: "#f5f5f3", border: "#d1d1ce" },
+]
+
 export function Card({ entry }: { entry: ShowcaseEntry }) {
-  const { Preview, name, tagline, status, slug } = entry
+  const { Preview, name, tagline, status, slug, supportsTheme } = entry
   const isComingSoon = status === "coming-soon"
+  const [theme, setTheme] = useState<"dark" | "light">("light")
 
   return (
     <a
@@ -37,7 +44,7 @@ export function Card({ entry }: { entry: ShowcaseEntry }) {
           justifyContent: "center",
         }}
       >
-        <Preview />
+        <Preview theme={theme} />
       </div>
 
       <div
@@ -57,10 +64,39 @@ export function Card({ entry }: { entry: ShowcaseEntry }) {
               letterSpacing: "-0.3px",
               color: "var(--page-text)",
               margin: 0,
+              flex: 1,
             }}
           >
             {name}
           </h3>
+
+          {supportsTheme && (
+            <div
+              style={{ display: "flex", gap: 6 }}
+              onClick={(e) => e.preventDefault()}
+            >
+              {SWATCHES.map((swatch) => (
+                <button
+                  key={swatch.key}
+                  onClick={(e) => {
+                    e.preventDefault()
+                    e.stopPropagation()
+                    setTheme(swatch.key)
+                  }}
+                  style={{
+                    width: 16,
+                    height: 16,
+                    borderRadius: "50%",
+                    background: swatch.circleBg,
+                    border: `1.5px solid ${swatch.border}`,
+                    cursor: "pointer",
+                    padding: 0,
+                  }}
+                />
+              ))}
+            </div>
+          )}
+
           {isComingSoon && (
             <span
               style={{
