@@ -3,7 +3,7 @@ import type { ShowcaseEntry } from "../types"
 import { Demo } from "./Demo"
 import { Preview } from "./Preview"
 
-const SITE_URL = "https://kinetic-clock.yxsh.in"
+const SITE_URL = "https://kinetic.yxsh.in"
 const GITHUB_URL = "https://github.com/meanmachine889/Component"
 const NAMESPACE = "@kinetic"
 const REGISTRY_NAME = "led-clock"

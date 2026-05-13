@@ -30,27 +30,28 @@ export function Showcase({ entry, demoContext }: { entry: ShowcaseEntry; demoCon
         padding: "clamp(20px, 4vw, 32px) clamp(20px, 5vw, 48px) clamp(48px, 8vw, 96px)",
         display: "flex",
         flexDirection: "column",
+        alignItems: "center",
         gap: 64,
       }}
     >
-      {/* ── Back link ─────────────────────────────────────────────────────── */}
-      <a
-        href={hrefFor(null)}
-        style={{
-          display: "inline-flex",
-          alignItems: "center",
-          gap: 6,
-          color: "var(--page-text-muted)",
-          textDecoration: "none",
-          fontSize: 13,
-          width: "fit-content",
-        }}
-      >
-        ← All components
-      </a>
+      {/* ── Content column ────────────────────────────────────────────────── */}
+      <div style={{ display: "flex", flexDirection: "column", gap: 64, width: "100%", maxWidth: 900 }}>
 
-      {/* ── Header ────────────────────────────────────────────────────────── */}
-      <div style={{ display: "flex", flexDirection: "column", gap: 64, width: "100%" }}>
+        {/* ── Back link ───────────────────────────────────────────────────── */}
+        <a
+          href={hrefFor(null)}
+          style={{
+            display: "inline-flex",
+            alignItems: "center",
+            gap: 6,
+            color: "var(--page-text-muted)",
+            textDecoration: "none",
+            fontSize: 13,
+            width: "fit-content",
+          }}
+        >
+          ← All components
+        </a>
         <header style={{ display: "flex", flexDirection: "column", gap: 16, maxWidth: 760 }}>
           <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
             <h1
