@@ -5,6 +5,7 @@ import { Showcase } from "./components/Showcase"
 import { GithubIcon, TwitterIcon } from "./components/icons"
 import { useHashRoute } from "./lib/useHashRoute"
 import { showcaseEntries } from "./showcase"
+import { Nav } from "./components/Nav"
 
 const GITHUB_URL = "https://github.com/meanmachine889/Component"
 const X_URL = "https://x.com/furiyash"
@@ -18,7 +19,7 @@ const LANDING_DESCRIPTION =
 
 export default function App() {
   const { slug } = useHashRoute()
-  const [theme, ] = useState<"dark" | "light">("light")
+  const [theme, setTheme] = useState<"dark" | "light">("light")
   const [windowWidth, setWindowWidth] = useState(
     typeof window !== "undefined" ? window.innerWidth : 1200,
   )
@@ -46,7 +47,7 @@ export default function App() {
         transition: "background 0.3s ease",
       }}
     >
-      {/* <Nav
+      <Nav
         title={BRAND}
         links={[
           { label: "Codebase", href: GITHUB_URL },
@@ -55,7 +56,7 @@ export default function App() {
         ]}
         theme={theme}
         onToggleTheme={() => setTheme((t) => (t === "dark" ? "light" : "dark"))}
-      /> */}
+      />
 
       {activeEntry ? (
         <Showcase entry={activeEntry} demoContext={{ windowWidth, theme }} />
