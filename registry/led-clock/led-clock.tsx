@@ -198,16 +198,45 @@ export function LedClock({ size = 600, format = "24h", showDate = true, timeZone
   const framePad = size * 0.028
   const innerPad = size * 0.026
   const mainDigitH = height * 0.58
-  // Width budget for the right-hand side panel: the inner black panel is
-  // (size - 2*framePad - 2*innerPad) wide, the side panel takes 36% of that,
-  // and each side has innerPad*0.6 of horizontal padding.
-  const sidePanelInner = Math.max(0, (size - 2 * framePad - 2 * innerPad) * 0.36 - 2 * innerPad * 0.6)
-  // "MONTH | DATE" is the widest line in the side panel; cap labelSize so it
-  // always fits without clipping. Coefficient derived empirically for the
-  // 9-char string + two separators + letter-spacing at fontWeight 600.
-  const labelSize = Math.min(height * 0.055, sidePanelInner / 8.2)
-  // Date digits ("12/31") also need to fit inside sidePanelInner.
-  const sideDigitH = Math.min(height * 0.16, sidePanelInner / 3.4)
+
+  // ── Side-panel sizing budget ────────────────────────────────────────────
+  // The side panel sits inside the inner black panel; its content area is
+  // bounded both horizontally (a fraction of the inner panel width) and
+  // vertically (the full inner panel height, minus the divider between the
+  // month/date section and the day section).
+  const contentW = Math.max(0, size - 2 * framePad - 2 * innerPad)
+  const contentH = Math.max(0, height - 2 * framePad - 2 * innerPad)
+  const sidePanelInnerW = Math.max(0, contentW * 0.36 - 2 * innerPad * 0.6)
+  // Divider between the two sections: 1px line + symmetric labelSize-based
+  // vertical margin. labelSize is recomputed below so we use a provisional
+  // value here; the divider's contribution is ~labelSize total + 1px.
+  // We solve via the width-based cap first, then re-derive sectionH.
+
+  // Horizontal cap for the label: "MONTH | DATE" + separators + letterspacing.
+  const labelSizeFromWidth = sidePanelInnerW / 8.2
+  // Proportional cap based on the clock height.
+  const labelSizeFromHeight = height * 0.055
+  const labelSize = Math.min(labelSizeFromHeight, labelSizeFromWidth)
+
+  // Each section gets roughly (sidePanelH - dividerTotal) / 2.
+  // dividerTotal = 1px line + 2 * (labelSize * 0.4) margin = 1 + 0.8 * labelSize
+  // (margin coefficient lowered from 0.5 to 0.4 to give content more room.)
+  const dividerMargin = labelSize * 0.4
+  const dividerTotal = 1 + 2 * dividerMargin
+  const sectionH = Math.max(0, (contentH - dividerTotal) / 2)
+
+  // Each section's content stack: label line-box + intra-section gap + digit line-box.
+  // With explicit lineHeight: 1 on all side-panel text (set inline below) the
+  // rendered heights are ~labelSize and ~sideDigitH, but Orbitron's intrinsic
+  // metrics still let glyphs extend a few percent past the em-box, so we keep
+  // a small safety factor (1.1) on the digit line.
+  const sectionGap = labelSize * 0.5
+  const sideDigitFromSection = Math.max(0, (sectionH - labelSize - sectionGap) / 1.1)
+
+  // Date digits ("12/31") also need to fit inside sidePanelInnerW.
+  const sideDigitFromWidth = sidePanelInnerW / 3.4
+  const sideDigitFromHeight = height * 0.16
+  const sideDigitH = Math.min(sideDigitFromHeight, sideDigitFromWidth, sideDigitFromSection)
 
   return (
     <div
@@ -283,7 +312,7 @@ export function LedClock({ size = 600, format = "24h", showDate = true, timeZone
                   flexDirection: "column",
                   justifyContent: "center",
                   alignItems: "center",
-                  gap: labelSize * 0.6,
+                  gap: sectionGap,
                   minWidth: 0,
                 }}
               >
@@ -297,6 +326,7 @@ export function LedClock({ size = 600, format = "24h", showDate = true, timeZone
                     letterSpacing: labelSize * 0.04,
                     fontWeight: 600,
                     whiteSpace: "nowrap",
+                    lineHeight: 1,
                   }}
                 >
                   <span>MONTH</span>
@@ -333,7 +363,8 @@ export function LedClock({ size = 600, format = "24h", showDate = true, timeZone
                 style={{
                   height: 1,
                   background: DIVIDER,
-                  margin: `${labelSize * 0.5}px 0`,
+                  margin: `${dividerMargin}px 0`,
+                  flexShrink: 0,
                 }}
               />
 
@@ -345,7 +376,7 @@ export function LedClock({ size = 600, format = "24h", showDate = true, timeZone
                   flexDirection: "column",
                   justifyContent: "center",
                   alignItems: "center",
-                  gap: labelSize * 0.6,
+                  gap: sectionGap,
                   minWidth: 0,
                 }}
               >
@@ -355,6 +386,7 @@ export function LedClock({ size = 600, format = "24h", showDate = true, timeZone
                     fontSize: labelSize,
                     letterSpacing: labelSize * 0.05,
                     fontWeight: 600,
+                    lineHeight: 1,
                   }}
                 >
                   DAY
