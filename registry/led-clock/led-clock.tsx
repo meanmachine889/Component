@@ -132,7 +132,46 @@ function DigitGroup({ text, height, gap }: { text: string; height: number; gap: 
   )
 }
 
+// Inject the Orbitron Google Font on first mount so the component works
+// drop-in without requiring the consumer to add the stylesheet themselves.
+// Deduped across instances; safe to call multiple times. Silently no-ops on
+// SSR (no document) and tolerates blocked requests (CSP, offline) by falling
+// back to the component's system-ui font stack.
+const ORBITRON_HREF =
+  "https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap"
+
+function useOrbitronFont() {
+  useEffect(() => {
+    if (typeof document === "undefined") return
+    if (document.querySelector(`link[data-led-clock-font="orbitron"]`)) return
+
+    const preconnect1 = document.createElement("link")
+    preconnect1.rel = "preconnect"
+    preconnect1.href = "https://fonts.googleapis.com"
+    preconnect1.setAttribute("data-led-clock-font", "orbitron")
+
+    const preconnect2 = document.createElement("link")
+    preconnect2.rel = "preconnect"
+    preconnect2.href = "https://fonts.gstatic.com"
+    preconnect2.crossOrigin = "anonymous"
+    preconnect2.setAttribute("data-led-clock-font", "orbitron")
+
+    const stylesheet = document.createElement("link")
+    stylesheet.rel = "stylesheet"
+    stylesheet.href = ORBITRON_HREF
+    stylesheet.setAttribute("data-led-clock-font", "orbitron")
+
+    document.head.appendChild(preconnect1)
+    document.head.appendChild(preconnect2)
+    document.head.appendChild(stylesheet)
+    // Intentionally no cleanup: other LedClock instances on the page may rely
+    // on the font, and removing/re-adding causes a flash on remount.
+  }, [])
+}
+
 export function LedClock({ size = 600, format = "24h", showDate = true, timeZone }: LedClockProps) {
+  useOrbitronFont()
+
   const [now, setNow] = useState(() => getZonedDate(timeZone))
   const [colonOn, setColonOn] = useState(true)
 
@@ -159,8 +198,16 @@ export function LedClock({ size = 600, format = "24h", showDate = true, timeZone
   const framePad = size * 0.028
   const innerPad = size * 0.026
   const mainDigitH = height * 0.58
-  const sideDigitH = height * 0.16
-  const labelSize = Math.max(8, height * 0.055)
+  // Width budget for the right-hand side panel: the inner black panel is
+  // (size - 2*framePad - 2*innerPad) wide, the side panel takes 36% of that,
+  // and each side has innerPad*0.6 of horizontal padding.
+  const sidePanelInner = Math.max(0, (size - 2 * framePad - 2 * innerPad) * 0.36 - 2 * innerPad * 0.6)
+  // "MONTH | DATE" is the widest line in the side panel; cap labelSize so it
+  // always fits without clipping. Coefficient derived empirically for the
+  // 9-char string + two separators + letter-spacing at fontWeight 600.
+  const labelSize = Math.min(height * 0.055, sidePanelInner / 8.2)
+  // Date digits ("12/31") also need to fit inside sidePanelInner.
+  const sideDigitH = Math.min(height * 0.16, sidePanelInner / 3.4)
 
   return (
     <div
@@ -225,6 +272,7 @@ export function LedClock({ size = 600, format = "24h", showDate = true, timeZone
                 flexDirection: "column",
                 padding: `0 ${innerPad * 0.6}px`,
                 boxSizing: "border-box",
+                overflow: "hidden",
               }}
             >
               {/* Month / Date */}

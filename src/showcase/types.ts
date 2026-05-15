@@ -16,6 +16,13 @@ export type InstallInfo = {
   npmInstall?: string
 }
 
+export type FontNote = {
+  /** Plain-English explanation of the font dependency and why it might need manual install. */
+  description: string
+  /** Snippets the consumer can paste to load the font themselves (e.g. <link> tags, @import, next/font). */
+  snippets: Array<{ label: string; code: string }>
+}
+
 export type ShowcaseEntry = {
   slug: string
   name: string
@@ -29,4 +36,5 @@ export type ShowcaseEntry = {
   usageLabel?: string
   componentName?: string
   props?: PropDef[]
+  fontNote?: FontNote
 }

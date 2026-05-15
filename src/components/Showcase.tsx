@@ -10,7 +10,7 @@ import type { DemoContext, ShowcaseEntry } from "@/showcase/types"
 
 export function Showcase({ entry, demoContext }: { entry: ShowcaseEntry; demoContext: DemoContext }) {
   const [installTab, setInstallTab] = useState<"cli" | "manual">("cli")
-  const { Demo, install, usageCode, usageLabel, props, componentName } = entry
+  const { Demo, install, usageCode, usageLabel, props, componentName, fontNote } = entry
 
   const cliAdd = install ? `npx shadcn@latest add ${install.namespace}/${install.registryName}` : null
   const cliAddUrl = install ? `npx shadcn@latest add ${install.registryJsonUrl}` : null
@@ -216,6 +216,38 @@ export function Showcase({ entry, demoContext }: { entry: ShowcaseEntry; demoCon
                 )
               })()
             )}
+          </section>
+        )}
+
+        {fontNote && (
+          <section style={{ display: "flex", flexDirection: "column", gap: 16, maxWidth: 820 }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+              <h2 style={{ fontSize: 26, fontWeight: 400, letterSpacing: "-0.5px", margin: 0 }}>
+                Font
+              </h2>
+              <span
+                style={{
+                  fontSize: 11,
+                  letterSpacing: "0.08em",
+                  textTransform: "uppercase",
+                  color: "var(--page-text-muted)",
+                  border: "1px solid var(--page-border)",
+                  padding: "2px 8px",
+                  borderRadius: 100,
+                  background: "var(--page-surface-2)",
+                }}
+              >
+                Optional
+              </span>
+            </div>
+            <p style={{ color: "var(--page-text-muted)", fontSize: 15, margin: 0, lineHeight: 1.6 }}>
+              {fontNote.description}
+            </p>
+            <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+              {fontNote.snippets.map((s, i) => (
+                <CodeBlock key={i} label={s.label} code={s.code} />
+              ))}
+            </div>
           </section>
         )}
 

@@ -55,6 +55,44 @@ export const ledClock: ShowcaseEntry = {
   usageCode: USAGE_CODE,
   usageLabel: "page.tsx",
   props: PROPS,
+  fontNote: {
+    description:
+      "The side panel (month / date / day) renders in Orbitron from Google Fonts. The component auto-injects the stylesheet at runtime, so most projects need no setup. If your environment blocks runtime CDN requests (strict CSP, offline-first, privacy-strict) or you prefer to control font loading yourself (e.g. Next.js next/font, self-hosting), add the font manually using one of the snippets below. The component detects a pre-existing link tag tagged with data-led-clock-font=\"orbitron\" and skips its own injection — no duplicate requests.",
+    snippets: [
+      {
+        label: "index.html (Vite, CRA, plain HTML)",
+        code: `<link rel="preconnect" href="https://fonts.googleapis.com" data-led-clock-font="orbitron" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin data-led-clock-font="orbitron" />
+<link
+  rel="stylesheet"
+  href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap"
+  data-led-clock-font="orbitron"
+/>`,
+      },
+      {
+        label: "globals.css (CSS @import)",
+        code: `@import url("https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap");`,
+      },
+      {
+        label: "app/layout.tsx (Next.js next/font)",
+        code: `import { Orbitron } from "next/font/google"
+
+const orbitron = Orbitron({ subsets: ["latin"], weight: ["400", "700"] })
+
+export default function RootLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <html lang="en" className={orbitron.className}>
+      <head>
+        {/* Sentinel: tells LedClock to skip its runtime Google Fonts injection */}
+        <link rel="preload" as="font" data-led-clock-font="orbitron" />
+      </head>
+      <body>{children}</body>
+    </html>
+  )
+}`,
+      },
+    ],
+  },
   install: {
     registryName: REGISTRY_NAME,
     namespace: NAMESPACE,
