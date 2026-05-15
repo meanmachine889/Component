@@ -10,7 +10,7 @@ import type { DemoContext, ShowcaseEntry } from "@/showcase/types"
 
 export function Showcase({ entry, demoContext }: { entry: ShowcaseEntry; demoContext: DemoContext }) {
   const [installTab, setInstallTab] = useState<"cli" | "manual">("cli")
-  const { Demo, install, usageCode, usageLabel, props, componentName, name, tagline, status } = entry
+  const { Demo, install, usageCode, usageLabel, props, componentName } = entry
 
   const cliAdd = install ? `npx shadcn@latest add ${install.namespace}/${install.registryName}` : null
   const cliAddUrl = install ? `npx shadcn@latest add ${install.registryJsonUrl}` : null
@@ -52,7 +52,7 @@ export function Showcase({ entry, demoContext }: { entry: ShowcaseEntry; demoCon
         >
           ← All components
         </a>
-        <header style={{ display: "flex", flexDirection: "column", gap: 16, maxWidth: 760 }}>
+        {/* <header style={{ display: "flex", flexDirection: "column", gap: 16, maxWidth: 760 }}>
           <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
             <h1
               style={{
@@ -90,7 +90,7 @@ export function Showcase({ entry, demoContext }: { entry: ShowcaseEntry; demoCon
           >
             {tagline}
           </p>
-        </header>
+        </header> */}
 
         {/* ── Demo ─────────────────────────────────────────────────────────── */}
         <section

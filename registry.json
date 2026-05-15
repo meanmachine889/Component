@@ -52,6 +52,21 @@
           "target": "components/led-clock.tsx"
         }
       ]
+    },
+    {
+      "name": "keycap",
+      "type": "registry:component",
+      "title": "Keycap",
+      "description": "A tactile mechanical keycap with a randomizing pixel face and a synthesized thock on press. Customizable color and size; supports mouse, touch, and keyboard (Space / Enter).",
+      "dependencies": [],
+      "registryDependencies": [],
+      "files": [
+        {
+          "path": "registry/keycap/keycap.tsx",
+          "type": "registry:component",
+          "target": "components/keycap.tsx"
+        }
+      ]
     }
   ]
 }
