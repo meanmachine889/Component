@@ -1,20 +1,13 @@
 import { showcaseEntries } from "@/showcase"
 import { Card } from "./Card"
 import { CodeBlock } from "./CodeBlock"
-import { GithubIcon, StarIcon } from "./icons"
 
 export function Landing({
   title,
   description,
-  githubUrl,
-  peerlistEmbedUrl,
-  peerlistHref,
 }: {
   title: string
   description: string
-  githubUrl: string
-  peerlistEmbedUrl?: string
-  peerlistHref?: string
 }) {
   return (
     <main
@@ -55,70 +48,6 @@ export function Landing({
         >
           {description}
         </p>
-
-        <div style={{ display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap" }}>
-          <a
-            href={githubUrl}
-            target="_blank"
-            rel="noreferrer"
-            aria-label="Star on GitHub"
-            style={{
-              display: "inline-flex",
-              alignItems: "center",
-              height: 48,
-              background: "transparent",
-              color: "var(--page-text)",
-              border: "1px solid var(--page-border)",
-              borderRadius: 12,
-              textDecoration: "none",
-              overflow: "hidden",
-              transition: "transform 0.2s ease, border-color 0.2s ease",
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.transform = "scale(1.02)"
-              e.currentTarget.style.borderColor = "var(--page-text-muted)"
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.transform = "scale(1)"
-              e.currentTarget.style.borderColor = "var(--page-border)"
-            }}
-          >
-            <span
-              style={{
-                display: "inline-flex",
-                alignItems: "center",
-                justifyContent: "center",
-                width: 48,
-                height: 48,
-                background: "var(--page-surface-2)",
-                borderRight: "1px solid var(--page-border)",
-              }}
-            >
-              <GithubIcon size={20} />
-            </span>
-            <span
-              style={{
-                display: "inline-flex",
-                alignItems: "center",
-                justifyContent: "center",
-                padding: "0 16px",
-                color: "#F5B800",
-              }}
-            >
-              <StarIcon size={16} />
-            </span>
-          </a>
-
-          {peerlistEmbedUrl && peerlistHref && (
-            <a href={peerlistHref} target="_blank" rel="noreferrer" style={{ display: "inline-block", lineHeight: 0 }}>
-              <img
-                src={peerlistEmbedUrl}
-                alt="On Peerlist"
-                style={{ width: "auto", height: 48 }}
-              />
-            </a>
-          )}
-        </div>
       </header>
 
       <section style={{ display: "flex", flexDirection: "column", gap: 12, maxWidth: 720 }}>

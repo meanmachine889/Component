@@ -10,7 +10,6 @@ const GITHUB_URL = "https://github.com/meanmachine889/Component"
 const X_URL = "https://x.com/furiyash"
 const LINKEDIN_URL = "https://www.linkedin.com/in/yash-bharadwaj-47871b251/"
 const PORTFOLIO_URL = "https://yxsh.in"
-const PEERLIST_HREF = "https://peerlist.io/furiyash/project/kinetic-clock"
 
 const BRAND = "Kinetic"
 const LANDING_DESCRIPTION =
@@ -49,13 +48,7 @@ export default function App() {
       {activeEntry ? (
         <Showcase entry={activeEntry} demoContext={{ windowWidth, theme }} />
       ) : (
-        <Landing
-          title={BRAND}
-          description={LANDING_DESCRIPTION}
-          githubUrl={GITHUB_URL}
-          peerlistEmbedUrl={`https://peerlist.io/api/v1/projects/embed/PRJHJKN9PMBRP67693MGRK7GEJLR9G?showUpvote=true&theme=${theme}`}
-          peerlistHref={PEERLIST_HREF}
-        />
+        <Landing title={BRAND} description={LANDING_DESCRIPTION} />
       )}
 
       <Footer

@@ -20,7 +20,7 @@ export function Card({ entry }: { entry: ShowcaseEntry }) {
         flexDirection: "column",
         textDecoration: "none",
         color: "inherit",
-        background: "var(--page-surface)",
+        background: "var(--page-surface-2)",
         borderRadius: 20,
         overflow: "hidden",
         transition: "transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease",
