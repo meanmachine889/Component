@@ -26,7 +26,7 @@ export function Showcase({ entry, demoContext }: { entry: ShowcaseEntry; demoCon
     <main
       style={{
         width: "100%",
-        padding: "clamp(20px, 4vw, 32px) clamp(20px, 5vw, 48px) clamp(48px, 8vw, 96px)",
+        padding: "clamp(40px, 7vw, 88px) clamp(20px, 5vw, 48px) clamp(48px, 8vw, 96px)",
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
