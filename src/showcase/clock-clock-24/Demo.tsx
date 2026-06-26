@@ -1,10 +1,20 @@
 import { useState } from "react"
 import { KineticClock } from "@registry/clock-clock-24/clock-clock-24"
-import { mono } from "@/components/styles"
+import { DemoStage, SegmentedControl, SwatchRow, Select } from "@/components/DemoControls"
 import type { DemoContext } from "../types"
 
-const TIMEZONE_OPTIONS: { label: string; value: string | undefined }[] = [
-  { label: "Local", value: undefined },
+// Each preset pairs a body color with a contrasting hand color.
+const PALETTES: { label: string; body: string; hand: string }[] = [
+  { label: "Paper",    body: "#ffffff", hand: "#111111" },
+  { label: "Charcoal", body: "#1d1d1f", hand: "#f2f2f2" },
+  { label: "Cherry",   body: "#e23b4a", hand: "#fff4f0" },
+  { label: "Cobalt",   body: "#2f5fd0", hand: "#eaf0fb" },
+  { label: "Mint",     body: "#3ec9a1", hand: "#08312a" },
+  { label: "Mustard",  body: "#d9a521", hand: "#2a2003" },
+]
+
+const TIMEZONE_OPTIONS: { value: string | ""; label: string }[] = [
+  { label: "Local", value: "" },
   { label: "New York", value: "America/New_York" },
   { label: "London", value: "Europe/London" },
   { label: "Berlin", value: "Europe/Berlin" },
@@ -16,128 +26,60 @@ const TIMEZONE_OPTIONS: { label: string; value: string | undefined }[] = [
 export function Demo({ windowWidth }: DemoContext) {
   const [mode, setMode] = useState<"active" | "medium" | "quiet">("active")
   const [format, setFormat] = useState<"12h" | "24h">("24h")
-  const [timeZone, setTimeZone] = useState<string | undefined>(undefined)
-  const [theme, setTheme] = useState<"light" | "dark">("light")
+  const [body, setBody] = useState(PALETTES[0].body)
+  const [timeZone, setTimeZone] = useState<string>("")
 
-  const clockSize = Math.min(windowWidth - 64, 700)
+  const palette = PALETTES.find((p) => p.body === body) ?? PALETTES[0]
+  const clockSize = Math.min(windowWidth - 96, 700)
 
   return (
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        gap: 40,
-        width: "100%",
-      }}
+    <DemoStage
+      controls={
+        <>
+          <SegmentedControl
+            label="Mode"
+            value={mode}
+            onChange={setMode}
+            options={[
+              { value: "active", label: "Active" },
+              { value: "medium", label: "Medium" },
+              { value: "quiet", label: "Quiet" },
+            ]}
+          />
+          <SegmentedControl
+            label="Format"
+            value={format}
+            onChange={setFormat}
+            options={[
+              { value: "24h", label: "24h" },
+              { value: "12h", label: "12h" },
+            ]}
+          />
+          <SwatchRow
+            label="Palette"
+            value={body}
+            onChange={setBody}
+            options={PALETTES.map((p) => ({ value: p.body, label: p.label }))}
+          />
+          <Select
+            label="Timezone"
+            value={timeZone}
+            onChange={setTimeZone}
+            options={TIMEZONE_OPTIONS}
+          />
+        </>
+      }
     >
       <div style={{ transform: windowWidth < 600 ? "scale(0.8)" : "scale(0.9)", transformOrigin: "center" }}>
-        <KineticClock mode={mode} format={format} size={clockSize} timeZone={timeZone} theme={theme} />
+        <KineticClock
+          mode={mode}
+          format={format}
+          size={clockSize}
+          timeZone={timeZone || undefined}
+          bodyColor={palette.body}
+          handColor={palette.hand}
+        />
       </div>
-
-      <div style={{ display: "flex", gap: 16, flexWrap: "wrap", justifyContent: "center" }}>
-        <div
-          style={{
-            display: "flex",
-            background: "var(--page-surface-2)",
-            padding: 4,
-            borderRadius: 14,
-            border: "1px solid var(--page-border)",
-          }}
-        >
-          {(["active", "medium", "quiet"] as const).map((m) => (
-            <button
-              key={m}
-              onClick={() => setMode(m)}
-              style={{
-                padding: "8px 18px",
-                borderRadius: 10,
-                border: "none",
-                background: mode === m ? "var(--page-bg)" : "transparent",
-                color: mode === m ? "var(--page-text)" : "var(--page-text-muted)",
-                fontSize: 12,
-                fontWeight: 500,
-                cursor: "pointer",
-                transition: "all 0.2s ease",
-                boxShadow: mode === m ? "0 2px 4px rgba(0,0,0,0.05)" : "none",
-              }}
-            >
-              {m.charAt(0).toUpperCase() + m.slice(1)}
-            </button>
-          ))}
-        </div>
-
-        <button
-          onClick={() => setFormat((f) => (f === "24h" ? "12h" : "24h"))}
-          style={{
-            padding: "10px 20px",
-            borderRadius: 14,
-            border: "1px solid var(--page-border)",
-            background: "var(--page-bg)",
-            color: "var(--page-text)",
-            fontSize: 12,
-            fontWeight: 500,
-            cursor: "pointer",
-          }}
-        >
-          {format}
-        </button>
-
-        <div
-          style={{
-            display: "flex",
-            background: "var(--page-surface-2)",
-            padding: 4,
-            borderRadius: 14,
-            border: "1px solid var(--page-border)",
-          }}
-        >
-          {(["light", "dark"] as const).map((t) => (
-            <button
-              key={t}
-              onClick={() => setTheme(t)}
-              style={{
-                padding: "8px 18px",
-                borderRadius: 10,
-                border: "none",
-                background: theme === t ? "var(--page-bg)" : "transparent",
-                color: theme === t ? "var(--page-text)" : "var(--page-text-muted)",
-                fontSize: 12,
-                fontWeight: 500,
-                cursor: "pointer",
-                transition: "all 0.2s ease",
-                boxShadow: theme === t ? "0 2px 4px rgba(0,0,0,0.05)" : "none",
-              }}
-            >
-              {t.charAt(0).toUpperCase() + t.slice(1)}
-            </button>
-          ))}
-        </div>
-
-        <select
-          value={timeZone ?? ""}
-          onChange={(e) => setTimeZone(e.target.value === "" ? undefined : e.target.value)}
-          style={{
-            padding: "10px 16px",
-            borderRadius: 14,
-            border: "1px solid var(--page-border)",
-            background: "var(--page-bg)",
-            color: "var(--page-text)",
-            fontSize: 12,
-            fontWeight: 500,
-            cursor: "pointer",
-            appearance: "none",
-            ...mono,
-          }}
-          aria-label="Timezone"
-        >
-          {TIMEZONE_OPTIONS.map((tz) => (
-            <option key={tz.label} value={tz.value ?? ""}>
-              {tz.label}
-            </option>
-          ))}
-        </select>
-      </div>
-    </div>
+    </DemoStage>
   )
 }

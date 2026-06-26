@@ -7,7 +7,7 @@
       "name": "clock-clock-24",
       "type": "registry:component",
       "title": "ClockClock 24",
-      "description": "An animated 24-clock grid that spells out the current time. Cycles through wave, spiral, scatter, and time-display phases. Supports independent light/dark theme via the `theme` prop or inherits from parent's `.dark` class.",
+      "description": "An animated 24-clock grid that spells out the current time. Cycles through wave, spiral, scatter, and time-display phases. Self-contained colors — pass `bodyColor` and `handColor`; the panel, faces, rims, and dial shadows are all derived from them, with no CSS variables or theme setup required.",
       "dependencies": ["clsx", "tailwind-merge"],
       "registryDependencies": ["utils"],
       "files": [
@@ -16,27 +16,7 @@
           "type": "registry:component",
           "target": "components/clock-clock-24.tsx"
         }
-      ],
-      "cssVars": {
-        "light": {
-          "clock-panel": "oklch(0.965 0 0)",
-          "clock-face": "oklch(1.000 0 0)",
-          "clock-face-edge": "oklch(0.965 0 0)",
-          "clock-rim": "oklch(0.905 0 0)",
-          "clock-hand": "oklch(0.130 0 0)",
-          "clock-dial-shadow": "inset 0 3px 8px rgba(0,0,0,0.08), inset 0 1px 3px rgba(0,0,0,0.10), inset 0 -2px 5px rgba(255,255,255,0.12)",
-          "clock-shadow": "0 1px 2px rgba(0,0,0,0.04), 0 8px 24px rgba(0,0,0,0.06)"
-        },
-        "dark": {
-          "clock-panel": "oklch(0.125 0 0)",
-          "clock-face": "oklch(0.185 0 0)",
-          "clock-face-edge": "oklch(0.160 0 0)",
-          "clock-rim": "oklch(0.245 0 0)",
-          "clock-hand": "oklch(0.930 0 0)",
-          "clock-dial-shadow": "inset 0 3px 8px rgba(0,0,0,0.48), inset 0 1px 3px rgba(0,0,0,0.55), inset 0 -2px 5px rgba(255,255,255,0.04)",
-          "clock-shadow": "0 1px 2px rgba(0,0,0,0.35), 0 8px 24px rgba(0,0,0,0.50)"
-        }
-      }
+      ]
     },
     {
       "name": "led-clock",
@@ -65,6 +45,21 @@
           "path": "registry/keycap/keycap.tsx",
           "type": "registry:component",
           "target": "components/keycap.tsx"
+        }
+      ]
+    },
+    {
+      "name": "perpetual-calendar",
+      "type": "registry:component",
+      "title": "Perpetual Calendar",
+      "description": "A tactile perpetual calendar board — embossed month, weekday, and date buttons rendered with pure CSS depth, with raised rings marking the current month, day, and date. Fully recolorable via color props and dependency-free.",
+      "dependencies": [],
+      "registryDependencies": [],
+      "files": [
+        {
+          "path": "registry/perpetual-calendar/perpetual-calendar.tsx",
+          "type": "registry:component",
+          "target": "components/perpetual-calendar.tsx"
         }
       ]
     }

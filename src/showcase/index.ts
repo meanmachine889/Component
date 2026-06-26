@@ -1,6 +1,7 @@
 import { clockClock24 } from "./clock-clock-24"
 import { keycap } from "./keycap"
 import { ledClock } from "./led-clock"
+import { perpetualCalendar } from "./perpetual-calendar"
 import type { ShowcaseEntry } from "./types"
 
-export const showcaseEntries: ShowcaseEntry[] = [clockClock24, ledClock, keycap]
+export const showcaseEntries: ShowcaseEntry[] = [clockClock24, ledClock, perpetualCalendar, keycap]

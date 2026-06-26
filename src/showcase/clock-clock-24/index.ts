@@ -8,32 +8,6 @@ const GITHUB_URL = "https://github.com/meanmachine889/Component"
 const NAMESPACE = "@kinetic"
 const REGISTRY_NAME = "clock-clock-24"
 
-const CSS_VARS = `:root {
-  --clock-panel:      oklch(0.965 0 0);
-  --clock-face:       oklch(1.000 0 0);
-  --clock-face-edge:  oklch(0.965 0 0);
-  --clock-rim:        oklch(0.905 0 0);
-  --clock-hand:       oklch(0.130 0 0);
-  --clock-dial-shadow: inset 0 3px 8px rgba(0,0,0,0.08),
-                       inset 0 1px 3px rgba(0,0,0,0.10),
-                       inset 0 -2px 5px rgba(255,255,255,0.12);
-  --clock-shadow:     0 1px 2px rgba(0,0,0,0.04),
-                      0 8px 24px rgba(0,0,0,0.06);
-}
-
-.dark {
-  --clock-panel:      oklch(0.125 0 0);
-  --clock-face:       oklch(0.185 0 0);
-  --clock-face-edge:  oklch(0.160 0 0);
-  --clock-rim:        oklch(0.245 0 0);
-  --clock-hand:       oklch(0.930 0 0);
-  --clock-dial-shadow: inset 0 3px 8px rgba(0,0,0,0.48),
-                       inset 0 1px 3px rgba(0,0,0,0.55),
-                       inset 0 -2px 5px rgba(255,255,255,0.04);
-  --clock-shadow:     0 1px 2px rgba(0,0,0,0.35),
-                      0 8px 24px rgba(0,0,0,0.50);
-}`
-
 const USAGE_CODE = `import { KineticClock } from "@/components/clock-clock-24"
 
 export function Page() {
@@ -42,7 +16,8 @@ export function Page() {
       mode="active"            // "active" | "medium" | "quiet"
       format="24h"             // "24h" | "12h"
       size={600}               // width in px
-      theme="auto"             // "light" | "dark" | "auto"
+      bodyColor="#ffffff"      // clock body (panel + faces + shadows derived)
+      handColor="#111111"      // clock hands
       timeZone="Asia/Kolkata"  // any IANA name; omit for viewer's local time
     />
   )
@@ -75,11 +50,17 @@ const PROPS: PropDef[] = [
       "Outer width in pixels. Each individual clock face is sized off this; height derives from the layout.",
   },
   {
-    name: "theme",
-    type: `"light" | "dark" | "auto"`,
-    default: `"auto"`,
+    name: "bodyColor",
+    type: "string",
+    default: `"#ffffff"`,
     description:
-      'Color palette. "auto" inherits from a parent\'s `.dark` class, so it follows your existing theme switcher.',
+      "Color of the clock body. The panel, faces, rims, and inner dial shadows are all derived from this single value. The shadow depth adapts automatically for dark vs. light bodies. Any CSS hex color.",
+  },
+  {
+    name: "handColor",
+    type: "string",
+    default: `"#111111"`,
+    description: "Color of the clock hands. Any CSS color.",
   },
   {
     name: "timeZone",
@@ -87,6 +68,13 @@ const PROPS: PropDef[] = [
     default: "undefined",
     description:
       'IANA timezone name (e.g. "America/New_York", "Asia/Tokyo"). When omitted, the viewer\'s local time is used. Invalid names silently fall back to local.',
+  },
+  {
+    name: "className",
+    type: "string",
+    default: "undefined",
+    description:
+      "Class applied to the panel root. The panel ships with no drop shadow — add your own elevation here (e.g. `shadow-xl`). Also accepts any standard div props.",
   },
 ]
 
@@ -96,7 +84,6 @@ export const clockClock24: ShowcaseEntry = {
   tagline:
     "A grid of 24 analog clocks that choreograph their hands to spell the current time. Inspired by ClockClock 24.",
   status: "ready",
-  supportsTheme: true,
   Demo,
   Preview,
   componentName: "KineticClock",
@@ -109,7 +96,7 @@ export const clockClock24: ShowcaseEntry = {
     registryJsonUrl: `${SITE_URL}/r/${REGISTRY_NAME}.json`,
     siteUrl: SITE_URL,
     componentFileUrl: `${GITHUB_URL}/blob/main/registry/${REGISTRY_NAME}/${REGISTRY_NAME}.tsx`,
-    cssVars: CSS_VARS,
+    cssVars: "",
     npmInstall: `npm install clsx tailwind-merge`,
   },
 }

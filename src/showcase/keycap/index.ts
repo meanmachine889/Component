@@ -16,6 +16,7 @@ export function Page() {
       size={280}          // outer width / height in px
       color="#ef6a1f"     // top-face color
       faceColor="#ffffff" // pixel face color
+      muted={false}       // disable the synthesized click sound
     />
   )
 }`

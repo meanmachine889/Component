@@ -3,6 +3,34 @@
 import * as React from "react"
 import { cn } from "@/lib/utils"
 
+// ─── Color helpers ──────────────────────────────────────────────────────────
+// Derive the panel / face / edge / rim from a single body color. Lightens or
+// darkens a hex by `amt` (-1..1). Used only when `bodyColor` is supplied.
+
+function shade(hex: string, amt: number): string {
+  const c = hex.replace("#", "")
+  const full = c.length === 3 ? c.split("").map((x) => x + x).join("") : c
+  const r = parseInt(full.slice(0, 2), 16)
+  const g = parseInt(full.slice(2, 4), 16)
+  const b = parseInt(full.slice(4, 6), 16)
+  const adj = (v: number) =>
+    amt >= 0 ? Math.round(v + (255 - v) * amt) : Math.round(v * (1 + amt))
+  const toHex = (v: number) =>
+    Math.max(0, Math.min(255, v)).toString(16).padStart(2, "0")
+  return `#${toHex(adj(r))}${toHex(adj(g))}${toHex(adj(b))}`
+}
+
+/** Perceptual luminance test — true when a color is dark enough to need stronger inset shadows. */
+function isDarkColor(hex: string): boolean {
+  const c = hex.replace("#", "")
+  const full = c.length === 3 ? c.split("").map((x) => x + x).join("") : c
+  const r = parseInt(full.slice(0, 2), 16)
+  const g = parseInt(full.slice(2, 4), 16)
+  const b = parseInt(full.slice(4, 6), 16)
+  // Rec. 601 luma, 0..255.
+  return 0.299 * r + 0.587 * g + 0.114 * b < 128
+}
+
 // ─── Digit definitions ────────────────────────────────────────────────────────
 // Each digit is rendered by a 2×3 grid of clocks. Positions: TL, TR, ML, MR, BL, BR.
 // Values are [hand1, hand2] angles in degrees.
@@ -237,26 +265,30 @@ export interface KineticClockProps extends React.HTMLAttributes<HTMLDivElement> 
    */
   size?: number
   /**
-   * Theme mode.
-   * - `light`: light mode colors
-   * - `dark`: dark mode colors
-   * - `auto`: inherits from parent's `.dark` class
-   * @default "auto"
-   */
-  theme?: "light" | "dark" | "auto"
-  /**
    * IANA timezone name (e.g. `"America/New_York"`, `"Asia/Tokyo"`).
    * When omitted, the viewer's local time is used.
    */
   timeZone?: string
+  /**
+   * Color of the clock body — the panel, faces, rims, and inner dial shadows
+   * are all derived from this single color. Any CSS hex color.
+   * @default "#ffffff"
+   */
+  bodyColor?: string
+  /**
+   * Color of the clock hands. Any CSS color.
+   * @default "#111111"
+   */
+  handColor?: string
 }
 
 export function KineticClock({
   mode = "active",
   format = "24h",
   size = 700,
-  theme = "auto",
   timeZone,
+  bodyColor = "#ffffff",
+  handColor = "#111111",
   className,
   style,
   ...rest
@@ -282,6 +314,21 @@ export function KineticClock({
   const clockSize = (size - gap * 7) / 8
   const paddingH = gap * 2
   const paddingV = gap * 2
+
+  // Fully self-contained colors: every --clock-* var is derived from bodyColor
+  // and handColor and written inline, so the clock never depends on a parent
+  // `.dark`/`.light` class. The inner dial shadow strengthens for darker bodies
+  // (where soft shadows would vanish) and stays subtle for light bodies.
+  const dark = isDarkColor(bodyColor)
+  const shadowA = dark ? 0.5 : 0.09 // inset dark-shadow alpha
+  const colorVars = {
+    "--clock-panel": shade(bodyColor, -0.04),
+    "--clock-face": bodyColor,
+    "--clock-face-edge": shade(bodyColor, -0.05),
+    "--clock-rim": shade(bodyColor, -0.12),
+    "--clock-hand": handColor,
+    "--clock-dial-shadow": `inset 0 3px 8px rgba(0,0,0,${shadowA}), inset 0 1px 3px rgba(0,0,0,${shadowA + 0.02}), inset 0 -2px 5px rgba(255,255,255,${dark ? 0.04 : 0.12})`,
+  } as React.CSSProperties
 
   React.useEffect(() => {
     const tick = () => {
@@ -367,16 +414,16 @@ export function KineticClock({
 
   return (
     <div
-      className={cn(
-        "inline-block",
-        theme === "dark" ? "dark" : theme === "light" ? "light" : "",
-        className
-      )}
+      className={cn("inline-block", className)}
       style={{
+        ...colorVars,
         background: "var(--clock-panel)",
         borderRadius: 0,
+        // Subtle border derived from the body color for a clean boundary when
+        // no drop shadow is applied. Add your own elevation via `className`
+        // (e.g. `shadow-xl`) or `style`.
+        border: `1px solid ${shade(bodyColor, dark ? 0.12 : -0.08)}`,
         padding: `${paddingV}px ${paddingH}px`,
-        boxShadow: "0 10px 24px rgba(0,0,0,0.10), 0 2px 6px rgba(0,0,0,0.06)",
         transition: "background 0.4s ease",
         ...style,
       }}

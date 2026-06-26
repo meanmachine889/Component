@@ -1,4 +1,4 @@
-import { Keycap } from "@registry/keycap/keycap"
+import { PerpetualCalendar } from "@registry/perpetual-calendar/perpetual-calendar"
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export function Preview(_props: { theme?: "light" | "dark" }) {
@@ -11,7 +11,7 @@ export function Preview(_props: { theme?: "light" | "dark" }) {
         pointerEvents: "none",
       }}
     >
-      <Keycap size={180} muted />
+      <PerpetualCalendar size={260} />
     </div>
   )
 }

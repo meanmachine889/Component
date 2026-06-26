@@ -5,12 +5,11 @@ import { PropCard } from "./PropCard"
 import { Step } from "./Step"
 import { ExternalIcon, GithubIcon } from "./icons"
 import { codeInline } from "./styles"
-import { hrefFor } from "@/lib/useHashRoute"
 import type { DemoContext, ShowcaseEntry } from "@/showcase/types"
 
 export function Showcase({ entry, demoContext }: { entry: ShowcaseEntry; demoContext: DemoContext }) {
   const [installTab, setInstallTab] = useState<"cli" | "manual">("cli")
-  const { Demo, install, usageCode, usageLabel, props, componentName, fontNote } = entry
+  const { Demo, name, tagline, install, usageCode, usageLabel, props, componentName, fontNote } = entry
 
   const cliAdd = install ? `npx shadcn@latest add ${install.namespace}/${install.registryName}` : null
   const cliAddUrl = install ? `npx shadcn@latest add ${install.registryJsonUrl}` : null
@@ -37,49 +36,19 @@ export function Showcase({ entry, demoContext }: { entry: ShowcaseEntry; demoCon
       {/* ── Content column ────────────────────────────────────────────────── */}
       <div style={{ display: "flex", flexDirection: "column", gap: 64, width: "100%", maxWidth: 900 }}>
 
-        {/* ── Back link ───────────────────────────────────────────────────── */}
-        <a
-          href={hrefFor(null)}
-          style={{
-            display: "inline-flex",
-            alignItems: "center",
-            gap: 6,
-            color: "var(--page-text-muted)",
-            textDecoration: "none",
-            fontSize: 13,
-            width: "fit-content",
-          }}
-        >
-          ← All components
-        </a>
-        {/* <header style={{ display: "flex", flexDirection: "column", gap: 16, maxWidth: 760 }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-            <h1
-              style={{
-                fontSize: "clamp(36px, 5vw, 52px)",
-                fontWeight: 400,
-                letterSpacing: "-1.2px",
-                lineHeight: 1.05,
-                margin: 0,
-              }}
-            >
-              {name}
-            </h1>
-            <span
-              style={{
-                fontSize: 11,
-                letterSpacing: "0.08em",
-                textTransform: "uppercase",
-                color: status === "ready" ? "var(--page-text-muted)" : "var(--page-text-subtle)",
-                border: "1px solid var(--page-border)",
-                padding: "2px 8px",
-                borderRadius: 100,
-                background: status === "ready" ? "var(--page-surface-2)" : "transparent",
-              }}
-            >
-              {status === "ready" ? "Ready" : "Soon"}
-            </span>
-          </div>
+        {/* ── Header ────────────────────────────────────────────────────────── */}
+        <header style={{ display: "flex", flexDirection: "column", gap: 16, maxWidth: 760 }}>
+          <h1
+            style={{
+              fontSize: "clamp(36px, 5vw, 52px)",
+              fontWeight: 400,
+              letterSpacing: "-1.2px",
+              lineHeight: 1.05,
+              margin: 0,
+            }}
+          >
+            {name}
+          </h1>
           <p
             style={{
               fontSize: 16,
@@ -90,13 +59,14 @@ export function Showcase({ entry, demoContext }: { entry: ShowcaseEntry; demoCon
           >
             {tagline}
           </p>
-        </header> */}
+        </header>
 
         {/* ── Demo ─────────────────────────────────────────────────────────── */}
         <section
           style={{
             width: "100%",
             display: "flex",
+            justifyContent: "center",
             padding: "32px 0",
           }}
         >

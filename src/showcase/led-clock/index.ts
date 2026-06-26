@@ -13,9 +13,10 @@ const USAGE_CODE = `import { LedClock } from "@/components/led-clock"
 export function Page() {
   return (
     <LedClock
-      size={600}         // outer width in px
-      format="24h"       // "24h" | "12h"
-      showDate={true}    // toggle the side date / day panel
+      size={600}              // outer width in px
+      format="24h"            // "24h" | "12h"
+      showDate={true}         // toggle the side date / day panel
+      timeZone="Asia/Kolkata" // any IANA name; omit for viewer's local time
     />
   )
 }`

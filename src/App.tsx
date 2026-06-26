@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react"
+import { FloatingThemeToggle } from "./components/FloatingThemeToggle"
 import { Footer } from "./components/Footer"
 import { Landing } from "./components/Landing"
 import { Showcase } from "./components/Showcase"
@@ -15,15 +16,25 @@ const BRAND = "Kinetic"
 const LANDING_DESCRIPTION =
   "A growing collection of drop-in React components — clocks, weather, and more on the way. Each one is themeable, dependency-light, and installs with a single shadcn command."
 
+const THEME_KEY = "kinetic-theme"
+
+function getInitialTheme(): "dark" | "light" {
+  if (typeof window === "undefined") return "light"
+  const stored = window.localStorage.getItem(THEME_KEY)
+  if (stored === "dark" || stored === "light") return stored
+  return window.matchMedia?.("(prefers-color-scheme: dark)").matches ? "dark" : "light"
+}
+
 export default function App() {
   const { slug } = useHashRoute()
-  const [theme, ] = useState<"dark" | "light">("light")
+  const [theme, setTheme] = useState<"dark" | "light">(getInitialTheme)
   const [windowWidth, setWindowWidth] = useState(
     typeof window !== "undefined" ? window.innerWidth : 1200,
   )
 
   useEffect(() => {
     document.documentElement.classList.toggle("dark", theme === "dark")
+    window.localStorage.setItem(THEME_KEY, theme)
   }, [theme])
 
   useEffect(() => {
@@ -45,10 +56,12 @@ export default function App() {
         transition: "background 0.3s ease",
       }}
     >
+      <FloatingThemeToggle theme={theme} onChange={setTheme} />
+
       {activeEntry ? (
         <Showcase entry={activeEntry} demoContext={{ windowWidth, theme }} />
       ) : (
-        <Landing title={BRAND} description={LANDING_DESCRIPTION} />
+        <Landing title={BRAND} description={LANDING_DESCRIPTION} theme={theme} />
       )}
 
       <Footer

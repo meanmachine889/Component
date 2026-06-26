@@ -58,7 +58,8 @@ export default function Page() {
       mode="active"            // "active" | "medium" | "quiet"
       format="24h"             // "24h" | "12h"
       size={700}               // outer width in px
-      theme="light"            // "light" | "dark" | "auto"
+      bodyColor="#ffffff"      // clock body (panel + faces derived)
+      handColor="#111111"      // clock hands
       timeZone="America/New_York"
     />
   )
@@ -93,7 +94,8 @@ export default function Page() {
 | `mode` | `"active" \| "medium" \| "quiet"` | `"active"` | **active** — Wave → Spiral → Scatter → Time. **medium** — Wave → Spiral → Time. **quiet** — time only. |
 | `format` | `"12h" \| "24h"` | `"24h"` | Time format. |
 | `size` | `number` | `700` | Outer width in pixels. |
-| `theme` | `"light" \| "dark" \| "auto"` | `"auto"` | Forces a theme or inherits from a parent `.dark` class. |
+| `bodyColor` | `string` | `"#ffffff"` | Clock body color — panel, faces, rims, and dial shadows are all derived from it. |
+| `handColor` | `string` | `"#111111"` | Color of the clock hands. |
 | `timeZone` | `string` | `undefined` | IANA timezone (e.g. `"Asia/Tokyo"`). Omit for local time. |
 
 ### LedClock
@@ -109,16 +111,10 @@ export default function Page() {
 
 ## Theming (KineticClock)
 
-Driven by CSS variables — override any of these in your globals:
-
-| Variable | Description |
-| -------- | ----------- |
-| `--clock-panel` | Background of the clock grid panel |
-| `--clock-face` | Background of each clock face |
-| `--clock-face-edge` | Edge gradient of each clock face |
-| `--clock-rim` | Border color of each clock |
-| `--clock-hand` | Color of the clock hands |
-| `--clock-dial-shadow` | Inset shadow on each dial |
+Self-contained — no CSS variables or global setup required. Pass `bodyColor` and
+`handColor` directly; the panel, faces, rims, and inner dial shadows are all
+derived from `bodyColor`, and the shadow depth adapts automatically for dark vs.
+light bodies.
 
 ---
 
